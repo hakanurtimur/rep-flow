@@ -16,6 +16,9 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useSignUp } from "@/hooks/auth/use-signup";
 
 const FormSchema = z
   .object({
@@ -43,6 +46,21 @@ const Page = () => {
     },
   });
 
+  const router = useRouter();
+  const { mutate: signUp, isPending } = useSignUp();
+
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    signUp(data, {
+      onSuccess: () => {
+        toast.success("Check your email to confirm.");
+        router.push("/sign-in");
+      },
+      onError: (err: any) => {
+        toast.error(err.message ?? "Signup failed");
+      },
+    });
+  };
+
   return (
     <AuthPageBody className="relative">
       <div className="right-0 h-full w-96 absolute top-0">
@@ -60,7 +78,7 @@ const Page = () => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit((data) => {
-                  console.log(data);
+                  onSubmit(data);
                 })}
                 className="flex flex-col gap-4 w-full justify-center"
               >
@@ -114,7 +132,11 @@ const Page = () => {
                     </FormItem>
                   )}
                 />
-                <Button className="cursor-pointer" variant="dark">
+                <Button
+                  disabled={isPending}
+                  className="cursor-pointer"
+                  variant="dark"
+                >
                   Sign Up
                 </Button>
                 <Separator className="my-4" />

@@ -16,6 +16,9 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useSignin } from "@/hooks/auth/use-signin";
 
 const FormSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -23,6 +26,8 @@ const FormSchema = z.object({
 });
 
 const Page = () => {
+  const { login } = useSignin();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -30,6 +35,26 @@ const Page = () => {
       password: "",
     },
   });
+
+  const router = useRouter();
+
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    await login(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Login successful");
+          router.push("/dashboard");
+        },
+        onError: (err: any) => {
+          toast.error(err.message ?? "Login failed");
+        },
+      },
+    );
+  };
 
   return (
     <AuthPageBody className="relative">
@@ -47,9 +72,7 @@ const Page = () => {
             <h1 className="text-xl mb-4 w-full font-semibold">Sign In</h1>
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit((data) => {
-                  console.log(data);
-                })}
+                onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col gap-4 w-full justify-center"
               >
                 <FormField
