@@ -1,5 +1,10 @@
 import PageBody from "@/components/app/page-body";
+import DashboardCalendar from "@/components/dashboard/dashboard-calendar/dashboard-calendar";
 
 export default function Page() {
-  return <PageBody>test</PageBody>;
+  return (
+    <PageBody>
+      <DashboardCalendar />
+    </PageBody>
+  );
 }

@@ -2,16 +2,13 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
+  ArmchairIcon,
   BookOpen,
-  Bot,
-  Command,
   Frame,
-  GalleryVerticalEnd,
+  HomeIcon,
   Map,
   PieChart,
   Settings2,
-  SquareTerminal,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -26,70 +23,41 @@ import {
 } from "@/components/ui/sidebar";
 import Logo from "@/components/logo";
 
-// This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Overview",
+      url: "/dashboard",
+      icon: HomeIcon,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Calendar",
+          url: "/dashboard",
         },
         {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
+          title: "Analytics",
           url: "#",
         },
       ],
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
+      title: "Exercises",
+      url: "/exercises",
+      icon: ArmchairIcon,
+      isActive: true,
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: "Exercises",
+          url: "/exercises/list",
         },
         {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
+          title: "Muscle Groups",
+          url: "/exercises/muscle-groups",
         },
       ],
     },
+
     {
       title: "Documentation",
       url: "#",
@@ -161,7 +129,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <div className="flex items-center  pt-4 gap-2 shrink-0">
-          <Logo className="w-[160px] h-[40px]" />
+          <Logo variant="light" size="medium" />
         </div>
       </SidebarHeader>
       <SidebarContent>

@@ -3,6 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
+export const runtime = "nodejs";
+
 export const authOptions = {
   providers: [
     CredentialsProvider({
@@ -18,8 +20,6 @@ export const authOptions = {
           email: credentials.email,
           password: credentials.password,
         });
-
-        console.log(data, error);
 
         if (error || !data.user) return null;
 

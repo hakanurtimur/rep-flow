@@ -16,7 +16,7 @@ export const completeOnboarding = async (
   }: {
     firstName?: string;
     lastName?: string;
-    age?: number;
+    age?: string;
     weight?: number;
     weightUnit?: string;
     height?: number;
@@ -26,7 +26,7 @@ export const completeOnboarding = async (
     notes?: string;
   },
 ) => {
-  return await prisma.user.update({
+  return prisma.user.update({
     where: { id: userId },
     data: {
       firstName,

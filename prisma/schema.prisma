@@ -1,81 +1,29 @@
-// File structure:
-// ├─ prisma/
-// │  └─ schema.prisma       <-- Prisma schema file (outside src)
-// └─ src/
-//    ├─ lib/
-//    │   └─ prisma.ts       <-- Prisma Client singleton
-
-// prisma/schema.prisma
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
 
 generator client {
   provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  height    Int?     // height in cm
-  weight    Int?     // weight in kg
-  xp        Int      @default(0)
-  firstName      String?
-  lastName       String?
-  age            String?
-  weightUnit     String?
-  heightUnit     String?
-  fitnessGoal    String?
-  activityLevel  String?
-  notes          String?
-
-  level     Int      @default(1)
-  onboarded Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  workouts           Workout[]
-  scheduledWorkouts  ScheduledWorkout[]
-  healthMetrics      HealthMetric[]
-  nutritionLogs      NutritionLog[]
-  exercises          Exercise[]
-
-  @@map("users")
-}
-
-model Exercise {
-  id          String      @id @default(cuid())
-  name        String
-  description String?
-  muscleGroup MuscleGroup
-  difficulty  Int         @default(1)
-  isSystem    Boolean     @default(false)
-  userId      String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  user            User?             @relation(fields: [userId], references: [id])
-  workoutExercises WorkoutExercise[]
-
-  @@map("exercises")
 }
 
 model Workout {
   id          String   @id @default(cuid())
   name        String
   description String?
-  duration    Int      // in minutes
+  duration    Int // in minutes
   difficulty  Int      @default(1)
   userId      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user             User              @relation(fields: [userId], references: [id])
-  exercises        WorkoutExercise[]
+  user              User               @relation(fields: [userId], references: [id])
+  exercises         WorkoutExercise[]
   scheduledWorkouts ScheduledWorkout[]
+  CalendarEvent     CalendarEvent[]
 
+  @@index([userId])
   @@map("workouts")
 }
 
@@ -86,14 +34,84 @@ model WorkoutExercise {
   sets       Int    @default(1)
   reps       Int    @default(1)
   weight     Float? // in kg
-  duration   Int?   // in seconds
-  restTime   Int?   // in seconds
+  duration   Int? // in seconds
+  restTime   Int? // in seconds
   order      Int    @default(0)
 
   workout  Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   exercise Exercise @relation(fields: [exerciseId], references: [id])
 
+  @@index([workoutId])
+  @@index([exerciseId])
   @@map("workout_exercises")
+}
+
+model WorkoutTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  duration    Int
+  difficulty  Int      @default(1)
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user              User               @relation(fields: [userId], references: [id])
+  templateExercises TemplateExercise[]
+
+  @@index([userId])
+  @@map("workout_templates")
+}
+
+model TemplateExercise {
+  id         String @id @default(cuid())
+  templateId String
+  exerciseId String
+  sets       Int    @default(1)
+  reps       Int    @default(1)
+  weight     Float? // in kg
+  duration   Int? // in seconds
+  restTime   Int? // in seconds
+  order      Int    @default(0)
+
+  template WorkoutTemplate @relation(fields: [templateId], references: [id])
+  exercise Exercise        @relation(fields: [exerciseId], references: [id])
+
+  @@index([templateId])
+  @@index([exerciseId])
+  @@map("template_exercises")
+}
+
+model User {
+  id            String  @id @default(cuid())
+  email         String  @unique
+  height        Int?
+  weight        Int?
+  xp            Int     @default(0)
+  firstName     String?
+  lastName      String?
+  age           String?
+  weightUnit    String?
+  heightUnit    String?
+  fitnessGoal   String?
+  activityLevel String?
+  notes         String?
+
+  level     Int      @default(1)
+  onboarded Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workouts          Workout[]
+  scheduledWorkouts ScheduledWorkout[]
+  healthMetrics     HealthMetric[]
+  nutritionLogs     NutritionLog[]
+  exercises         Exercise[]
+  calendarEvents    CalendarEvent[]
+  WorkoutTemplate   WorkoutTemplate[]
+  MuscleGroup       MuscleGroup[]
+
+  @@map("users")
 }
 
 model ScheduledWorkout {
@@ -108,52 +126,127 @@ model ScheduledWorkout {
   workout Workout @relation(fields: [workoutId], references: [id])
   user    User    @relation(fields: [userId], references: [id])
 
+  @@index([workoutId])
+  @@index([userId])
   @@map("scheduled_workouts")
-}
-
-model HealthMetric {
-  id        String   @id @default(cuid())
-  userId    String
-  date      DateTime @default(now())
-  sleep     Float?   // hours
-  water     Int?     // cups
-  stress    Int?     // 1-10
-  energy    Int?     // 1-10
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@map("health_metrics")
 }
 
 model NutritionLog {
   id          String   @id @default(cuid())
   userId      String
   date        DateTime @default(now())
-  mealType    String   // breakfast, lunch, dinner, snack
-  calories    Int
-  protein     Float?
-  carbs       Float?
-  fat         Float?
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  user  User   @relation(fields: [userId], references: [id])
+  meals Meal[]
 
+  calendarEvent CalendarEvent?
+
+  @@index([userId])
   @@map("nutrition_logs")
 }
 
-enum MuscleGroup {
-  CHEST
-  BACK
-  LEGS
-  SHOULDERS
-  ARMS
-  CORE
-  CARDIO
-  FULL_BODY
+model Meal {
+  id             String   @id @default(cuid())
+  nutritionLogId String
+  type           MealType
+  calories       Int
+  protein        Float?
+  carbs          Float?
+  fat            Float?
+  description    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  nutritionLog NutritionLog @relation(fields: [nutritionLogId], references: [id])
+
+  @@index([nutritionLogId])
+  @@map("meals")
 }
 
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
 
+model HealthMetric {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime @default(now())
+  sleep     Float? // hours
+  water     Int? // cups
+  stress    Int? // 1-10
+  energy    Int? // 1-10
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("health_metrics")
+}
+
+model Exercise {
+  id            String   @id @default(cuid())
+  name          String
+  description   String?
+  muscleGroupId String
+  difficulty    Int      @default(1)
+  isSystem      Boolean  @default(false)
+  userId        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user              User?              @relation(fields: [userId], references: [id])
+  muscleGroup       MuscleGroup        @relation(fields: [muscleGroupId], references: [id])
+  workoutExercises  WorkoutExercise[]
+  templateExercises TemplateExercise[]
+
+  @@index([userId])
+  @@index([muscleGroupId])
+  @@map("exercises")
+}
+
+model MuscleGroup {
+  id        String   @id @default(cuid())
+  name      String
+  isSystem  Boolean  @default(false)
+  userId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User?      @relation(fields: [userId], references: [id])
+  exercises Exercise[]
+
+  @@unique([name, userId])
+  @@index([userId])
+  @@map("muscle_groups")
+}
+
+model CalendarEvent {
+  id          String    @id @default(cuid())
+  userId      String
+  type        EventType
+  date        DateTime
+  workoutId   String?
+  nutritionId String?   @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user      User          @relation(fields: [userId], references: [id])
+  workout   Workout?      @relation(fields: [workoutId], references: [id])
+  nutrition NutritionLog? @relation(fields: [nutritionId], references: [id])
+
+  @@index([userId])
+  @@index([workoutId])
+  @@map("calendar_events")
+}
+
+enum EventType {
+  WORKOUT
+  NUTRITION
+}

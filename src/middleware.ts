@@ -12,6 +12,15 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/profile") ||
     pathname.startsWith("/workouts");
 
+  if (
+    token &&
+    (pathname === "/sign-in" ||
+      pathname === "/sign-up" ||
+      pathname === "/forgot-password")
+  ) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
   const isOnboardingRoute = pathname.startsWith("/onboarding");
 
   if (!token && (isProtectedRoute || isOnboardingRoute)) {
@@ -35,5 +44,8 @@ export const config = {
     "/profile/:path*",
     "/workouts/:path*",
     "/onboarding/:path*",
+    "/sign-in",
+    "/sign-up",
+    "/forgot-password",
   ],
 };

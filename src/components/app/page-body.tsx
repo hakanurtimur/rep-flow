@@ -7,7 +7,9 @@ interface Props {
 
 const PageBody = ({ className, children }: Props) => {
   return (
-    <div className={cn("px-6 py-10 w-full h-full", className)}>{children}</div>
+    <div className={cn("px-6 py-10 w-full h-full relative", className)}>
+      {children}
+    </div>
   );
 };
 
