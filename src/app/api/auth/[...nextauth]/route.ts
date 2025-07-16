@@ -17,8 +17,8 @@ export const authOptions = {
         const supabase = await createSupabaseServerClient();
 
         const { data, error } = await supabase.auth.signInWithPassword({
-          email: credentials.email,
-          password: credentials.password,
+          email: credentials!.email,
+          password: credentials!.password,
         });
 
         if (error || !data.user) return null;

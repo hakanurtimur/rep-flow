@@ -89,7 +89,7 @@ const Page = () => {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="shadcn" {...field} />
+                        <Input placeholder="" {...field} />
                       </FormControl>
 
                       <FormMessage />
@@ -103,11 +103,7 @@ const Page = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input
-                          type={"password"}
-                          placeholder="shadcn"
-                          {...field}
-                        />
+                        <Input type={"password"} placeholder="" {...field} />
                       </FormControl>
 
                       <FormMessage />
@@ -121,11 +117,7 @@ const Page = () => {
                     <FormItem>
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
-                        <Input
-                          type={"password"}
-                          placeholder="shadcn"
-                          {...field}
-                        />
+                        <Input type={"password"} placeholder="" {...field} />
                       </FormControl>
 
                       <FormMessage />

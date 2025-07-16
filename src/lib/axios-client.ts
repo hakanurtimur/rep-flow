@@ -49,12 +49,18 @@ class ApiService {
         return response;
       },
       (error) => {
-        const message =
+        const backendMessage =
+          error?.response?.data?.message ||
           error?.response?.data?.error?.message ||
           error?.message ||
           "Unexpected error";
 
-        return Promise.reject({ message });
+        const status = error?.response?.status;
+
+        return Promise.reject({
+          message: backendMessage,
+          status,
+        });
       },
     );
   }
