@@ -22,6 +22,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import Logo from "@/components/logo";
+import { useTheme } from "next-themes";
 
 const data = {
   navMain: [
@@ -125,11 +126,13 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { theme } = useTheme();
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <div className="flex items-center  pt-4 gap-2 shrink-0">
-          <Logo variant="light" size="medium" />
+          <Logo variant={theme === "dark" ? "dark" : "light"} size="medium" />
         </div>
       </SidebarHeader>
       <SidebarContent>

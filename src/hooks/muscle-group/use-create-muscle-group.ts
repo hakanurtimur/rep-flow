@@ -7,7 +7,10 @@ export const useCreateMuscleGroup = ({ onSuccess = () => {} }) => {
   return useMutation({
     mutationFn: createMuscleGroup,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["muscle-groups"] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["muscle-groups"] }),
+        queryClient.invalidateQueries({ queryKey: ["muscle-group-options"] }),
+      ]);
       onSuccess();
     },
     onError: (err) => {

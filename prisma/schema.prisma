@@ -1,7 +1,7 @@
 datasource db {
   provider     = "postgresql"
   url          = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  directUrl    = env("DIRECT_URL")
   relationMode = "prisma"
 }
 
@@ -192,24 +192,35 @@ model HealthMetric {
 }
 
 model Exercise {
-  id            String   @id @default(cuid())
-  name          String
-  description   String?
-  muscleGroupId String
-  difficulty    Int      @default(1)
-  isSystem      Boolean  @default(false)
-  userId        String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  isSystem        Boolean  @default(false)
+  userId          String?
+  totalDifficulty Int      @default(1) // yeni eklendi
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  user              User?              @relation(fields: [userId], references: [id])
-  muscleGroup       MuscleGroup        @relation(fields: [muscleGroupId], references: [id])
+  user              User?                 @relation(fields: [userId], references: [id])
+  muscleGroupLinks  ExerciseMuscleGroup[] // ilişki many-to-many oldu
   workoutExercises  WorkoutExercise[]
   templateExercises TemplateExercise[]
 
+  @@unique([name, userId])
   @@index([userId])
-  @@index([muscleGroupId])
   @@map("exercises")
+}
+
+model ExerciseMuscleGroup {
+  id            String      @id @default(cuid())
+  exercise      Exercise    @relation(fields: [exerciseId], references: [id])
+  exerciseId    String
+  muscleGroup   MuscleGroup @relation(fields: [muscleGroupId], references: [id])
+  muscleGroupId String
+  difficulty    Int         @default(1)
+
+  @@unique([exerciseId, muscleGroupId])
+  @@index([muscleGroupId])
 }
 
 model MuscleGroup {
@@ -220,8 +231,8 @@ model MuscleGroup {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      User?      @relation(fields: [userId], references: [id])
-  exercises Exercise[]
+  user      User?                 @relation(fields: [userId], references: [id])
+  exercises ExerciseMuscleGroup[]
 
   @@unique([name, userId])
   @@index([userId])

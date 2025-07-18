@@ -60,9 +60,7 @@ export function NavUser({
                   <AvatarImage src={user.image ?? ""} alt={user.name ?? ""} />
                 )}
                 <AvatarFallback className="rounded-lg">
-                  {user && user.email
-                    ? user.email.charAt(0).toUpperCase()
-                    : "RF"}
+                  {user && user.name ? user.name.charAt(0).toUpperCase() : "RF"}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -87,8 +85,8 @@ export function NavUser({
                     <AvatarImage src={user.image ?? ""} alt={user.name ?? ""} />
                   )}
                   <AvatarFallback className="rounded-lg">
-                    {user && user.email
-                      ? user.email.charAt(0).toUpperCase()
+                    {user && user.name
+                      ? user.name.charAt(0).toUpperCase()
                       : "RF"}
                   </AvatarFallback>
                 </Avatar>

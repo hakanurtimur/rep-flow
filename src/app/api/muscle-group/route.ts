@@ -1,4 +1,3 @@
-// src/app/api/muscle-group/route.ts
 import { getServerSession } from "next-auth";
 import {
   createMuscleGroup,

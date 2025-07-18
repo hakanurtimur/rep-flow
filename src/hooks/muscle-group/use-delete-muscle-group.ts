@@ -7,7 +7,10 @@ export const useDeleteMuscleGroup = ({ onSuccess = () => {} }) => {
   return useMutation({
     mutationFn: deleteMuscleGroup,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["muscle-groups"] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["muscle-groups"] }),
+        queryClient.invalidateQueries({ queryKey: ["muscle-group-options"] }),
+      ]);
       onSuccess();
     },
     onError: (err) => {

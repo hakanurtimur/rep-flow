@@ -1,4 +1,4 @@
-import PageBody from "@/components/app/page-body";
+import PageBody from "@/components/layout-related/page-body";
 import MuscleGroups from "@/components/exercises/muscle-groups/muscle-groups";
 
 const Page = () => {

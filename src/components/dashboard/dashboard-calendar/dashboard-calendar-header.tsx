@@ -12,21 +12,16 @@ import {
 } from "lucide-react";
 import ExpandableButton from "@/components/ui/expandable-button";
 import { AnimatePresence, motion } from "motion/react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { monthNames } from "@/components/dashboard/dashboard-calendar/dashboard-calendar-body";
 import { CalendarPopover } from "@/components/ui/calendar-popover";
 import AddLogModal from "@/components/dashboard/add-log-modal/add-log-modal";
 
 const calendarOptions = [
-  { mode: "yearly", label: "Year", icon: CalendarIcon },
-  { mode: "monthly", label: "Month", icon: LayoutGridIcon },
-  { mode: "weekly", label: "Week", icon: Tally3Icon },
-  { mode: "daily", label: "Day", icon: AlignJustifyIcon },
+  { mode: "yearly", label: "Yearly", icon: CalendarIcon },
+  { mode: "monthly", label: "Monthly", icon: LayoutGridIcon },
+  { mode: "weekly", label: "Weekly", icon: Tally3Icon },
+  { mode: "daily", label: "Daily", icon: AlignJustifyIcon },
 ] as const;
 
 interface Props {
@@ -159,23 +154,17 @@ const DashboardCalendarHeader = ({
 
           <div className="flex shadow-xs border rounded-md items-center justify-end">
             {calendarOptions.map(({ mode, label, icon: Icon }) => (
-              <Tooltip key={mode}>
-                <TooltipTrigger>
-                  <ExpandableButton
-                    size="icon"
-                    variant="ghost"
-                    className="bg-transparent shadow-none cursor-pointer"
-                    onClick={() => handleModeChange(mode)}
-                    expanded={calendarMode === mode}
-                    expandedText={label}
-                  >
-                    <Icon className="w-4 h-4" />
-                  </ExpandableButton>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <span className="text-xs">{label}</span>
-                </TooltipContent>
-              </Tooltip>
+              <ExpandableButton
+                size="icon"
+                variant="ghost"
+                className="bg-transparent shadow-none cursor-pointer"
+                onClick={() => handleModeChange(mode)}
+                expanded={calendarMode === mode}
+                expandedText={label}
+                key={mode}
+              >
+                <Icon className="w-4 h-4" />
+              </ExpandableButton>
             ))}
           </div>
           <AddLogModal>

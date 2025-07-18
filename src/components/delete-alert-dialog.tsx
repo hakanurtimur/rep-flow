@@ -16,6 +16,7 @@ interface Props {
   children: React.ReactNode;
   title: string;
   description: string;
+  customError?: string;
   disabled: boolean;
   loading: boolean;
   isOpen: boolean;
@@ -27,6 +28,7 @@ export default function DeleteAlertDialog({
   children,
   title,
   description,
+  customError,
   disabled,
   loading,
   isOpen,
@@ -39,12 +41,21 @@ export default function DeleteAlertDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
+          {customError && <p className="text-red-500 text-sm">{customError}</p>}
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={disabled}>Cancel</AlertDialogCancel>
-          <Button loading={loading} disabled={disabled} onClick={onDelete}>
-            Continue
-          </Button>
+          {!customError && (
+            <AlertDialogCancel disabled={disabled}>Cancel</AlertDialogCancel>
+          )}
+          {customError ? (
+            <Button onClick={() => onOpenChange(false)} disabled={disabled}>
+              OK
+            </Button>
+          ) : (
+            <Button loading={loading} disabled={disabled} onClick={onDelete}>
+              Continue
+            </Button>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

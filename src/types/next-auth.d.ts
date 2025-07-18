@@ -15,6 +15,7 @@ declare module "next-auth" {
     id: string;
     email: string;
     onboarded: boolean;
+    name?: string | null;
   }
 
   interface JWT {

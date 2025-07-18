@@ -23,26 +23,24 @@ export default function MuscleGroupDialog({ variant, children, model }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <form>
-        <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>
-              {variant === "edit" ? "Edit Muscle Group" : "Create Muscle Group"}
-            </DialogTitle>
-            <DialogDescription>
-              {variant === "edit"
-                ? "Edit the details of this muscle group. Click save when you're done."
-                : "Add a new muscle group to your exercise database. Fill in the details below and click save when you're done."}
-            </DialogDescription>
-          </DialogHeader>
-          <MuscleGroupDialogForm
-            model={model}
-            closeDialog={() => setOpen(false)}
-            variant={variant}
-          />
-        </DialogContent>
-      </form>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>
+            {variant === "edit" ? "Edit Muscle Group" : "Create Muscle Group"}
+          </DialogTitle>
+          <DialogDescription>
+            {variant === "edit"
+              ? "Edit the details of this muscle group"
+              : "Add a new muscle group."}
+          </DialogDescription>
+        </DialogHeader>
+        <MuscleGroupDialogForm
+          model={model}
+          closeDialog={() => setOpen(false)}
+          variant={variant}
+        />
+      </DialogContent>
     </Dialog>
   );
 }

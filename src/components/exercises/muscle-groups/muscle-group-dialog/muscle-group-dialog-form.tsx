@@ -126,13 +126,21 @@ const MuscleGroupDialogForm = ({ variant, model, closeDialog }: Props) => {
                   }
                 }}
                 isOpen={isDeleteDialogOpen}
-                onOpenChange={setIsDeleteDialogOpen}
+                onOpenChange={(open) => {
+                  setIsDeleteDialogOpen(open);
+                  if (!open) {
+                    setTimeout(() => {
+                      deleteMutation.reset();
+                    }, 200);
+                  }
+                }}
                 disabled={
                   mutation.isPending ||
                   updateMutation.isPending ||
                   deleteMutation.isPending
                 }
                 loading={deleteMutation.isPending}
+                customError={deleteMutation.error?.message}
               >
                 <Button
                   disabled={

@@ -1,6 +1,7 @@
 import api from "@/lib/axios-client";
 import type { MuscleGroup } from "@prisma/client";
 import { CreateUpdateMuscleGroup } from "@/zod-schemas/muscle-group-schemas";
+import { MuscleGroupOption } from "@/zod-schemas/exercise-schemas";
 
 // GET
 export const getMuscleGroups = async (): Promise<MuscleGroup[]> => {
@@ -31,4 +32,12 @@ export const updateMuscleGroup = async (
 // DELETE
 export const deleteMuscleGroup = async (id: string) => {
   return api.delete(`muscle-group/${id}`);
+};
+
+// GET as options
+export const getMuscleGroupOptions = async () => {
+  const res = await api.get<MuscleGroupOption[]>(
+    "muscle-group/muscle-group-options",
+  );
+  return res.data;
 };

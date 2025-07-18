@@ -107,9 +107,24 @@ export async function DELETE(
       );
     }
 
+    if (err.code === "MUSCLE_GROUP_IN_USE") {
+      return Response.json(
+        {
+          success: false,
+          data: null,
+          message: err.message,
+        },
+        { status: 404 },
+      );
+    }
+
     console.error("Unexpected error:", err);
     return Response.json(
-      { success: false, data: null, message: "Internal server error" },
+      {
+        success: false,
+        data: null,
+        message: "Internal server error",
+      },
       { status: 500 },
     );
   }

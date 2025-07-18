@@ -33,6 +33,9 @@ export const authOptions = {
           id: id,
           email: email,
           onboarded: user.onboarded,
+          name:
+            `
+          ${user.firstName} ${user.lastName}`.trim() || null,
         };
       },
     }),
@@ -59,6 +62,7 @@ export const authOptions = {
         session.user.id = token.sub as string;
         session.user.email = token.email as string;
         session.user.onboarded = token.onboarded;
+        session.user.name = token.name as string | null;
       }
       return session;
     },
