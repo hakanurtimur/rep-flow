@@ -68,7 +68,7 @@ const Page = () => {
                 <Separator className="my-4" />
 
                 <p className="text-sm">
-                  Don't have an account?{" "}
+                  Don&#39;t have an account?{" "}
                   <Link className="font-semibold" href={"/sign-up"}>
                     Create One
                   </Link>

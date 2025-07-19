@@ -3,8 +3,9 @@ import {
   createMuscleGroup,
   getAllMuscleGroups,
 } from "@/services/muscle-group-service";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
 import { Prisma } from "@prisma/client";
+import { authOptions } from "@/lib/auth-options";
 
 export async function GET() {
   const session = await getServerSession(authOptions);

@@ -1,10 +1,11 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
 import {
   deleteMuscleGroup,
   updateMuscleGroup,
 } from "@/services/muscle-group-service";
 import { Prisma } from "@prisma/client";
+import { authOptions } from "@/lib/auth-options";
 
 export async function PUT(
   req: Request,

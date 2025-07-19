@@ -13,9 +13,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { ModeToggleTabs } from "@/components/mode-toggle-tabs";
+import { authOptions } from "@/lib/auth-options";
 
 export default async function Layout({
   children,

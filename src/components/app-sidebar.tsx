@@ -6,8 +6,6 @@ import {
   BookOpen,
   Frame,
   HomeIcon,
-  Map,
-  PieChart,
   Settings2,
 } from "lucide-react";
 
@@ -58,27 +56,22 @@ const data = {
         },
       ],
     },
-
     {
-      title: "Documentation",
-      url: "#",
+      title: "Workouts",
+      url: "/workouts",
       icon: BookOpen,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: "Workouts",
+          url: "/workouts/list",
         },
         {
-          title: "Get Started",
-          url: "#",
+          title: "Scheduled Workouts",
+          url: "/workouts/scheduled",
         },
         {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
+          title: "Workout Templates",
+          url: "/workouts/templates",
         },
       ],
     },
@@ -108,19 +101,9 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Back Training",
       url: "#",
       icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
     },
   ],
 };

@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
 import { getMuscleGroupOptions } from "@/services/muscle-group-service";
+import { authOptions } from "@/lib/auth-options";
 
 export async function GET() {
   const session = await getServerSession(authOptions);

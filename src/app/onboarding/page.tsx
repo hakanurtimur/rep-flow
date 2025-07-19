@@ -165,7 +165,7 @@ export default function OnboardingPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Welcome To RepFlow! Let's get you set up
+            Welcome To RepFlow! Let&#39;s get you set up
           </h1>
           <p className="text-muted-foreground">
             Complete your profile to get personalized recommendations
@@ -502,8 +502,8 @@ export default function OnboardingPage() {
                       Setup Complete!
                     </h3>
                     <p className="text-muted-foreground">
-                      Thank you for completing your profile. You're all set to
-                      start your fitness journey!
+                      Thank you for completing your profile. You&#39;re all set
+                      to start your fitness journey!
                     </p>
                     <div className="bg-muted rounded-lg p-4 text-left">
                       <h4 className="font-medium text-foreground mb-2">
