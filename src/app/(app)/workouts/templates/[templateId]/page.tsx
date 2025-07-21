@@ -1,5 +1,5 @@
 import PageBody from "@/components/layout-related/page-body";
-import TemplateDetails from "@/components/workouts/templates/template-details/template-details";
+import TemplateDetails from "@/components/app/workouts/templates/template-details/template-details";
 
 const Page = () => {
   return (

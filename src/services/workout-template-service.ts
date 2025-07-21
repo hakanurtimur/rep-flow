@@ -1,4 +1,8 @@
 import { prisma } from "@/lib/prisma";
+import {
+  CreateWorkoutTemplateInput,
+  UpdateWorkoutTemplateInput,
+} from "@/zod-schemas/workout-template-schemas";
 
 // GET
 export async function getWorkoutTemplates(userId: string) {
@@ -53,28 +57,6 @@ export async function getWorkoutTemplateById(id: string, userId: string) {
 }
 
 // PUT
-
-interface UpdateWorkoutTemplateInput {
-  id: string;
-  name?: string;
-  description?: string;
-  duration?: number;
-  difficulty?: number;
-  userId: string;
-  templateExercises: {
-    id?: string; // optional for frontend, but unused here
-    exerciseId: string;
-    order: number;
-    sets: {
-      reps: number;
-      weight?: number;
-      duration?: number;
-      restTime?: number;
-      order: number;
-    }[];
-  }[];
-}
-
 export async function updateWorkoutTemplate(
   userId: string,
   id: string,
@@ -134,5 +116,48 @@ export async function updateWorkoutTemplate(
     }
 
     return { success: true };
+  });
+}
+
+// POST
+export async function createWorkoutTemplate(
+  userId: string,
+  data: CreateWorkoutTemplateInput,
+) {
+  return prisma.$transaction(async (tx) => {
+    const workoutTemplate = await tx.workoutTemplate.create({
+      data: {
+        userId,
+        name: data.name,
+        description: data.description,
+        duration: data.duration,
+        difficulty: data.difficulty,
+      },
+    });
+
+    for (const te of data.templateExercises) {
+      const newTE = await tx.templateExercise.create({
+        data: {
+          templateId: workoutTemplate.id,
+          exerciseId: te.exerciseId,
+          order: te.order,
+        },
+      });
+
+      for (const set of te.sets) {
+        await tx.templateExerciseSet.create({
+          data: {
+            templateExerciseId: newTE.id,
+            reps: set.reps,
+            weight: set.weight,
+            duration: set.duration,
+            restTime: set.restTime,
+            order: set.order,
+          },
+        });
+      }
+    }
+
+    return { success: true, id: workoutTemplate.id };
   });
 }

@@ -1,5 +1,6 @@
 import api from "@/lib/axios-client";
 import {
+  CreateWorkoutTemplateInput,
   ExtendedWorkoutTemplate,
   UpdateWorkoutTemplateInput,
   WorkoutTemplateList,
@@ -27,5 +28,15 @@ export const updateWorkoutTemplate = async (
     `workout-template/${args.id}`,
     { ...args },
   );
+  return res.data;
+};
+
+// POST
+export const createWorkoutTemplate = async (
+  args: CreateWorkoutTemplateInput,
+): Promise<CreateWorkoutTemplateInput> => {
+  const res = await api.post<CreateWorkoutTemplateInput>(`workout-template`, {
+    ...args,
+  });
   return res.data;
 };

@@ -36,7 +36,7 @@ export type ExtendedWorkoutTemplate = WorkoutTemplate & {
 
 export const UpdateWorkoutTemplateSchema = z.object({
   id: z.string(),
-  name: z.string().optional(),
+  name: z.string(),
   description: z.string().optional(),
   duration: z.number().nonnegative(),
   difficulty: z.number().nonnegative(),
@@ -45,4 +45,12 @@ export const UpdateWorkoutTemplateSchema = z.object({
 
 export type UpdateWorkoutTemplateInput = z.infer<
   typeof UpdateWorkoutTemplateSchema
+>;
+
+export const CreateWorkoutTemplateSchema = UpdateWorkoutTemplateSchema.omit({
+  id: true,
+});
+
+export type CreateWorkoutTemplateInput = z.infer<
+  typeof CreateWorkoutTemplateSchema
 >;

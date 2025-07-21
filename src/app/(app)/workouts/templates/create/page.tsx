@@ -1,10 +1,10 @@
 import PageBody from "@/components/layout-related/page-body";
-import MuscleGroups from "@/components/app/exercises/muscle-groups/muscle-groups";
+import CreateTemplate from "@/components/app/workouts/templates/create/create-template";
 
 const Page = () => {
   return (
     <PageBody>
-      <MuscleGroups />
+      <CreateTemplate />
     </PageBody>
   );
 };

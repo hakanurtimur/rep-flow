@@ -1,5 +1,5 @@
 import PageBody from "@/components/layout-related/page-body";
-import Exercises from "@/components/exercises/list/exercises";
+import Exercises from "@/components/app/exercises/list/exercises";
 
 const Page = () => {
   return (
