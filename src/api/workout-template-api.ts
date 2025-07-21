@@ -40,3 +40,8 @@ export const createWorkoutTemplate = async (
   });
   return res.data;
 };
+
+// DELETE
+export const deleteWorkoutTemplate = async (id: string) => {
+  return api.delete(`workout-template/${id}`);
+};

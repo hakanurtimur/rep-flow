@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import {
+  deleteWorkoutTemplate,
   getWorkoutTemplateById,
   updateWorkoutTemplate,
 } from "@/services/workout-template-service";
@@ -84,51 +85,37 @@ export async function PUT(
   }
 }
 
-// export async function DELETE(
-//     req: Request,
-//     { params }: { params: Promise<{ id: string }> },
-// ) {
-//   const session = await getServerSession(authOptions);
-//   const userId = session?.user?.id;
-//   const { id } = await params;
-//
-//   if (!userId) {
-//     return Response.json(
-//         { success: false, data: null, message: "Unauthorized" },
-//         { status: 401 },
-//     );
-//   }
-//
-//   try {
-//     const deleted = await deleteExercise(id, userId);
-//
-//     return Response.json(
-//         {
-//           success: true,
-//           data: deleted,
-//           message: "Muscle group deleted successfully",
-//         },
-//         { status: 200 },
-//     );
-//   } catch (err: any) {
-//     if (
-//         err instanceof Prisma.PrismaClientKnownRequestError &&
-//         err.code === "P2025"
-//     ) {
-//       return Response.json(
-//           {
-//             success: false,
-//             data: null,
-//             message: "Muscle group not found or already deleted.",
-//           },
-//           { status: 404 },
-//       );
-//     }
-//
-//     console.error("Unexpected error:", err);
-//     return Response.json(
-//         { success: false, data: null, message: "Internal server error" },
-//         { status: 500 },
-//     );
-//   }
-// }
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+  const { id } = await params;
+
+  if (!userId) {
+    return Response.json(
+      { success: false, data: null, message: "Unauthorized" },
+      { status: 401 },
+    );
+  }
+
+  try {
+    const deleted = await deleteWorkoutTemplate(id, userId);
+
+    return Response.json(
+      {
+        success: true,
+        data: deleted,
+        message: "Workout template deleted successfully",
+      },
+      { status: 200 },
+    );
+  } catch (err: any) {
+    console.error("Unexpected error:", err);
+    return Response.json(
+      { success: false, data: null, message: "Internal server error" },
+      { status: 500 },
+    );
+  }
+}

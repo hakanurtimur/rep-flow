@@ -161,3 +161,37 @@ export async function createWorkoutTemplate(
     return { success: true, id: workoutTemplate.id };
   });
 }
+
+//DELETE
+export async function deleteWorkoutTemplate(
+  templateId: string,
+  userId: string,
+) {
+  return prisma.$transaction(async (tx) => {
+    const exercises = await tx.templateExercise.findMany({
+      where: { templateId },
+      select: { id: true },
+    });
+
+    const templateExerciseIds = exercises.map((e) => e.id);
+
+    await tx.templateExerciseSet.deleteMany({
+      where: {
+        templateExerciseId: { in: templateExerciseIds },
+      },
+    });
+
+    await tx.templateExercise.deleteMany({
+      where: { templateId },
+    });
+
+    await tx.workoutTemplate.delete({
+      where: {
+        id: templateId,
+        userId,
+      },
+    });
+
+    return { success: true };
+  });
+}

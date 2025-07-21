@@ -3,6 +3,7 @@ import type {
   CreateExerciseInput,
   UpdateExerciseInput,
 } from "@/zod-schemas/exercise-schemas";
+import { AppError } from "@/lib/app-error";
 
 // GET
 export const getExercises = async (userId: string) => {
@@ -67,7 +68,6 @@ export const getExerciseById = async (id: string, userId: string) => {
 };
 
 // PUT
-
 export const updateExercise = async (
   id: string,
   userId: string,
@@ -114,7 +114,28 @@ export const updateExercise = async (
   });
 };
 
+//DELETE
 export const deleteExercise = async (id: string, userId: string) => {
+  const relatedTemplates = await prisma.templateExercise.findMany({
+    where: { exerciseId: id },
+    include: {
+      template: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
+  if (relatedTemplates.length > 0) {
+    const names = relatedTemplates.map((e) => e.template.name);
+    const uniqueNames = [...new Set(names)];
+    throw new AppError(
+      `This exercise is used in ${uniqueNames.length} workout templates: ${uniqueNames.join(", ")}. Please delete it from related workout templates before delete the exercise`,
+      "EXERCISE_IN_USE",
+    );
+  }
+
   const exercise = await prisma.exercise.findFirst({
     where: {
       id,
@@ -146,7 +167,6 @@ export const deleteExercise = async (id: string, userId: string) => {
 };
 
 // GET as options
-
 export const getExerciseOptions = async (userId: string) => {
   return prisma.exercise.findMany({
     where: {
