@@ -12,12 +12,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { EditIcon } from "lucide-react";
+import { EyeIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { TableCell, TableRow } from "@/components/ui/table";
 import DifficultyRating from "@/components/ui/difficulty-rating";
 import { WorkoutTemplateList } from "@/zod-schemas/workout-template-schemas";
 import TemplateListItemHoverCard from "@/components/workouts/templates/template-list-item-hover-card";
+import Link from "next/link";
 
 interface Props {
   template: WorkoutTemplateList;
@@ -32,30 +33,20 @@ const TemplateListItem = ({ template, viewVariant }: Props) => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>{template.name}</CardTitle>
-              {template.isSystem ? (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant={"ghost"}
-                        className={"opacity-50 cursor-not-allowed"}
-                      >
-                        <EditIcon />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link href={`/workouts/templates/${template.id}`}>
+                      <Button size="icon" variant={"ghost"}>
+                        <EyeIcon />
                       </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <span className="text-xs">
-                        System Workout Templates cannot be edited
-                      </span>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ) : (
-                <Button size="icon" variant={"ghost"}>
-                  <EditIcon />
-                </Button>
-              )}
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {template.isSystem ? "See Details" : "See Details & Update"}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
             <CardDescription>{template.description}</CardDescription>
           </CardHeader>
@@ -99,31 +90,24 @@ const TemplateListItem = ({ template, viewVariant }: Props) => {
           <TableCell>
             <TemplateListItemHoverCard template={template} />
           </TableCell>
+          <TableCell>
+            <DifficultyRating value={template.difficulty} />
+          </TableCell>
           <TableCell className="flex items-center justify-end">
-            {template.isSystem ? (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant={"ghost"}
-                      className={"opacity-50 cursor-not-allowed"}
-                    >
-                      <EditIcon />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link href={`/workouts/templates/${template.id}`}>
+                    <Button size="icon" variant={"ghost"}>
+                      <EyeIcon />
                     </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span className="text-xs">
-                      System Workout Templates cannot be edited
-                    </span>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ) : (
-              <Button size="icon" variant={"ghost"}>
-                <EditIcon />
-              </Button>
-            )}
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {template.isSystem ? "See Details" : "See Details & Update"}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </TableCell>
         </TableRow>
       )}

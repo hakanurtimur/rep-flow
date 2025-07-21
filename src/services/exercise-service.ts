@@ -144,3 +144,29 @@ export const deleteExercise = async (id: string, userId: string) => {
     });
   });
 };
+
+// GET as options
+
+export const getExerciseOptions = async (userId: string) => {
+  return prisma.exercise.findMany({
+    where: {
+      OR: [{ userId }, { userId: null }],
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      totalDifficulty: true,
+      muscleGroupLinks: {
+        select: {
+          difficulty: true,
+          muscleGroup: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+};

@@ -1,6 +1,7 @@
 import api from "@/lib/axios-client";
 import {
   CreateExerciseInput,
+  ExerciseOption,
   ExtendedExercises,
   UpdateExerciseInput,
 } from "@/zod-schemas/exercise-schemas";
@@ -28,7 +29,7 @@ export const getExerciseById = async (
   return res.data;
 };
 
-//PUT
+// PUT
 export const updateExercise = async (
   args: UpdateExerciseInput,
 ): Promise<UpdateExerciseInput> => {
@@ -38,7 +39,13 @@ export const updateExercise = async (
   return res.data;
 };
 
-//DELETE
+// DELETE
 export const deleteExercise = async (id: string) => {
   return api.delete(`exercise/${id}`);
+};
+
+//GET as options
+export const getExerciseOptions = async (): Promise<ExerciseOption[]> => {
+  const res = await api.get<ExerciseOption[]>("exercise/exercise-options");
+  return res.data;
 };

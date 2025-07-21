@@ -9,6 +9,7 @@ export const useCreateExercise = ({ onSuccess = () => {} }) => {
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["exercises"] }),
+        queryClient.invalidateQueries({ queryKey: ["exercises-options"] }),
       ]);
       onSuccess();
     },

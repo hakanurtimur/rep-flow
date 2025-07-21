@@ -16,8 +16,6 @@ const Templates = () => {
     return <LoadingOverlay fullScreen={false} />;
   }
 
-  console.log(query.data);
-
   const handleViewVariantChange = (variant: "card" | "list") => {
     setViewVariant(variant);
   };

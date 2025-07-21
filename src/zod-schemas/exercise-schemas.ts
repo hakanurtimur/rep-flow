@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { Exercise, ExerciseMuscleGroup, MuscleGroup } from "@prisma/client";
+import { MuscleGroupWithDifficultySchema } from "./muscle-group-schemas";
 
 export type ExtendedExercises = Exercise & {
   muscleGroupLinks: (ExerciseMuscleGroup & {
@@ -29,9 +30,12 @@ export const UpdateExerciseSchema = CreateExerciseSchema.extend({
 
 export type UpdateExerciseInput = z.infer<typeof UpdateExerciseSchema>;
 
-export const MuscleGroupOptionsSchema = z.object({
-  id: z.string(),
+export const ExerciseOptionSchema = z.object({
+  id: z.string().cuid(),
   name: z.string(),
+  description: z.string().optional(),
+  totalDifficulty: z.number().min(1).max(10),
+  muscleGroupLinks: z.array(MuscleGroupWithDifficultySchema),
 });
 
-export type MuscleGroupOption = z.infer<typeof MuscleGroupOptionsSchema>;
+export type ExerciseOption = z.infer<typeof ExerciseOptionSchema>;

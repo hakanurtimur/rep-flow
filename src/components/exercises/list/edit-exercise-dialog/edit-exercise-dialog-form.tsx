@@ -135,7 +135,7 @@ const EditExerciseDialogForm = ({ model, onClose }: Props) => {
               >
                 + Add Muscle Group
               </Button>
-              <span className="text-sm text-red-500 ml-2">
+              <span className="text-sm text-destructive ml-2">
                 {form.formState.errors.muscleGroups &&
                   form.formState.errors.muscleGroups.message}
               </span>
@@ -189,7 +189,7 @@ const EditExerciseDialogForm = ({ model, onClose }: Props) => {
                           />
                           <FlameIcon
                             className={cn(
-                              "text-red-600 fill-red-600 w-6 h-6 transition-opacity duration-300 mt-1.5",
+                              "text-destructive fill-destructive w-6 h-6 transition-opacity duration-300 mt-1.5",
                               form.getValues(
                                 `muscleGroups.${index}.difficulty`,
                               ) === 10 && "animate-bounce",

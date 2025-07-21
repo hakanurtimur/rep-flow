@@ -11,6 +11,7 @@ export const useUpdateExercise = ({ onSuccess = () => {} }) => {
         queryClient.invalidateQueries({ queryKey: ["exercise", data.id] }),
         queryClient.invalidateQueries({ queryKey: ["exercise"] }),
         queryClient.invalidateQueries({ queryKey: ["exercises"] }),
+        queryClient.invalidateQueries({ queryKey: ["exercises-options"] }),
       ]);
       onSuccess();
     },

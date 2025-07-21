@@ -41,7 +41,9 @@ export default function DeleteAlertDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
-          {customError && <p className="text-red-500 text-sm">{customError}</p>}
+          {customError && (
+            <p className="text-destructive text-sm">{customError}</p>
+          )}
         </AlertDialogHeader>
         <AlertDialogFooter>
           {!customError && (

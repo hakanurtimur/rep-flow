@@ -123,7 +123,7 @@ export async function DELETE(
       {
         success: true,
         data: deleted,
-        message: "Muscle group deleted successfully",
+        message: "Exercise deleted successfully",
       },
       { status: 200 },
     );
@@ -136,7 +136,7 @@ export async function DELETE(
         {
           success: false,
           data: null,
-          message: "Muscle group not found or already deleted.",
+          message: "Exercise not found or already deleted.",
         },
         { status: 404 },
       );

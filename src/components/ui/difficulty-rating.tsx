@@ -20,12 +20,12 @@ const DifficultyRating = ({ value, maxFlames = 5, className }: Props) => {
       {Array.from({ length: fullCount }).map((_, i) => (
         <FlameIcon
           key={`full-${i}`}
-          className="w-4 h-4 text-red-600 fill-red-600"
+          className="w-4 h-4 text-destructive fill-destructive"
         />
       ))}
 
       {hasHalf && (
-        <FlameIcon className="w-4 h-4 text-red-400 fill-red-400 opacity-50" />
+        <FlameIcon className="w-4 h-4 text-destructive fill-destructive  opacity-50" />
       )}
 
       {Array.from({ length: emptyCount }).map((_, i) => (

@@ -15,6 +15,7 @@ export type WizardStep<T extends FieldValues> = {
   icon: ReactElement;
   components: ReactElement[];
   fields: Path<T>[];
+  onExtraNext?: () => boolean;
 };
 
 type Props<T extends FieldValues> = {
@@ -25,6 +26,7 @@ type Props<T extends FieldValues> = {
   onCancel: () => void;
   loading?: boolean;
   completeButtonText?: string;
+  stepperClassName?: string;
   className?: string;
 };
 
@@ -36,6 +38,7 @@ export function WizardForm<T extends FieldValues>({
   onCancel,
   loading = false,
   completeButtonText = "Complete",
+  stepperClassName,
   className,
 }: Props<T>) {
   const [stepIndex, setStepIndex] = useState(0);
@@ -48,7 +51,11 @@ export function WizardForm<T extends FieldValues>({
   const handleNext = async () => {
     setDirection("right");
     const valid = await form.trigger(currentStep.fields);
-    if (!valid) return;
+    let isExtraValid = true;
+    if (currentStep.onExtraNext !== undefined) {
+      isExtraValid = currentStep.onExtraNext();
+    }
+    if (!valid || !isExtraValid) return;
     setStepIndex((prev) => prev + 1);
   };
 
@@ -81,7 +88,12 @@ export function WizardForm<T extends FieldValues>({
           </MotionXWithDirection>
 
           {/* Stepper */}
-          <div className="flex justify-between items-center mb-8 relative">
+          <div
+            className={cn(
+              "flex justify-around items-center mb-8 relative",
+              stepperClassName,
+            )}
+          >
             {steps.map((step, index) => {
               const isActive = index === stepIndex;
               const isCompleted = index < stepIndex;
@@ -89,7 +101,7 @@ export function WizardForm<T extends FieldValues>({
               return (
                 <div
                   key={step.id}
-                  className="flex flex-col items-center flex-1 relative"
+                  className="flex flex-col items-center relative"
                 >
                   <div
                     className={`
@@ -128,13 +140,23 @@ export function WizardForm<T extends FieldValues>({
 
         {/* Buttons */}
         <div className="flex justify-between pt-6">
-          <Button type="button" variant="outline" onClick={onCancel}>
+          <Button
+            disabled={loading}
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+          >
             Cancel
           </Button>
 
           <div className="flex gap-2">
             {!isFirstStep && (
-              <Button type="button" variant="outline" onClick={handlePrev}>
+              <Button
+                disabled={loading}
+                type="button"
+                variant="outline"
+                onClick={handlePrev}
+              >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Previous
               </Button>

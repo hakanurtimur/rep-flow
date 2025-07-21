@@ -1,7 +1,9 @@
 import api from "@/lib/axios-client";
 import type { MuscleGroup } from "@prisma/client";
-import { CreateUpdateMuscleGroup } from "@/zod-schemas/muscle-group-schemas";
-import { MuscleGroupOption } from "@/zod-schemas/exercise-schemas";
+import {
+  CreateUpdateMuscleGroup,
+  MuscleGroupOption,
+} from "@/zod-schemas/muscle-group-schemas";
 
 // GET
 export const getMuscleGroups = async (): Promise<MuscleGroup[]> => {

@@ -7,8 +7,6 @@ export async function GET() {
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
 
-  console.log(userId);
-
   if (!userId) {
     return Response.json(
       { success: false, data: null, message: "Unauthorized" },

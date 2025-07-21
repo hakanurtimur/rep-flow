@@ -1,13 +1,10 @@
-import {
-  Exercise,
-  ExerciseMuscleGroup,
-  MuscleGroup,
-  TemplateExercise,
-  TemplateExerciseSet,
-  WorkoutTemplate,
-} from "@prisma/client";
+import { WorkoutTemplate } from "@prisma/client";
 
 import { z } from "zod";
+import {
+  ExerciseForTemplateSchema,
+  ExtendedTemplateExercise,
+} from "@/zod-schemas/template-exercise-schemas";
 
 export const WorkoutTemplateListSchema = z.object({
   id: z.string(),
@@ -34,12 +31,18 @@ export const WorkoutTemplateListSchema = z.object({
 export type WorkoutTemplateList = z.infer<typeof WorkoutTemplateListSchema>;
 
 export type ExtendedWorkoutTemplate = WorkoutTemplate & {
-  templateExercises: (TemplateExercise & {
-    exercise: Exercise & {
-      muscleGroupLinks: (ExerciseMuscleGroup & {
-        muscleGroup: MuscleGroup;
-      })[];
-    };
-    sets: TemplateExerciseSet[];
-  })[];
+  templateExercises: ExtendedTemplateExercise[];
 };
+
+export const UpdateWorkoutTemplateSchema = z.object({
+  id: z.string(),
+  name: z.string().optional(),
+  description: z.string().optional(),
+  duration: z.number().nonnegative(),
+  difficulty: z.number().nonnegative(),
+  templateExercises: z.array(ExerciseForTemplateSchema),
+});
+
+export type UpdateWorkoutTemplateInput = z.infer<
+  typeof UpdateWorkoutTemplateSchema
+>;
