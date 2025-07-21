@@ -5,7 +5,8 @@ const prisma = new PrismaClient();
 async function main() {
   const userId = "9431cee5-11dd-4fb3-b2c6-c820d0c469fa";
 
-  // Temizlik
+  // 1. Temizlik
+  await prisma.workoutTemplateOnWorkout.deleteMany();
   await prisma.templateExerciseSet.deleteMany();
   await prisma.workoutExerciseSet.deleteMany();
   await prisma.templateExercise.deleteMany();
@@ -16,6 +17,7 @@ async function main() {
   await prisma.exercise.deleteMany();
   await prisma.muscleGroup.deleteMany();
 
+  // 2. Muscle Group ekle
   const systemGroups = [
     "CHEST",
     "BACK",
@@ -27,24 +29,17 @@ async function main() {
     "FULL_BODY",
   ];
 
-  // 1. Seed Muscle Groups
   for (const name of systemGroups) {
     await prisma.muscleGroup.create({
-      data: {
-        name,
-        isSystem: true,
-        userId: null,
-      },
+      data: { name, isSystem: true },
     });
   }
 
   const muscleGroups = await prisma.muscleGroup.findMany({
-    where: {
-      isSystem: true,
-    },
+    where: { isSystem: true },
   });
 
-  // 2. Seed Exercise
+  // 3. Exercise ekle
   const exercises = [];
   for (let i = 0; i < 3; i++) {
     const exercise = await prisma.exercise.create({
@@ -69,7 +64,7 @@ async function main() {
     exercises.push(exercise);
   }
 
-  // 3. Seed Workout
+  // 4. Workout ekle
   const workout = await prisma.workout.create({
     data: {
       name: "Seed Workout 1",
@@ -103,7 +98,7 @@ async function main() {
     }
   }
 
-  // 4. Seed WorkoutTemplate
+  // 5. Workout Template oluştur
   const template = await prisma.workoutTemplate.create({
     data: {
       name: "Template 1",
@@ -137,42 +132,13 @@ async function main() {
     }
   }
 
-  // 5. System Workout Templates
-  for (let t = 0; t < 2; t++) {
-    const systemTemplate = await prisma.workoutTemplate.create({
-      data: {
-        name: `System Template ${t + 1}`,
-        description: `This is a system default template ${t + 1}`,
-        isSystem: true,
-        userId: null,
-        duration: 20 + t * 10,
-        difficulty: 2 + t,
-      },
-    });
-
-    for (let i = 0; i < exercises.length; i++) {
-      const te = await prisma.templateExercise.create({
-        data: {
-          templateId: systemTemplate.id,
-          exerciseId: exercises[i].id,
-          order: i,
-        },
-      });
-
-      for (let j = 0; j < 2; j++) {
-        await prisma.templateExerciseSet.create({
-          data: {
-            templateExerciseId: te.id,
-            reps: 10 + j,
-            weight: 25 + j * 5,
-            duration: 40,
-            restTime: 20,
-            order: j,
-          },
-        });
-      }
-    }
-  }
+  // 6. Workout <-> Template bağlantısını pivot tabloya ekle
+  await prisma.workoutTemplateOnWorkout.create({
+    data: {
+      workoutId: workout.id,
+      templateId: template.id,
+    },
+  });
 
   console.log("✅ Seed completed.");
 }

@@ -13,19 +13,35 @@ model Workout {
   id          String   @id @default(cuid())
   name        String
   description String?
-  duration    Int // in minutes
+  duration    Int
   difficulty  Int      @default(1)
   userId      String
+  templateId  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user              User               @relation(fields: [userId], references: [id])
+  user              User                       @relation(fields: [userId], references: [id])
   exercises         WorkoutExercise[]
+  templates         WorkoutTemplateOnWorkout[]
   scheduledWorkouts ScheduledWorkout[]
   CalendarEvent     CalendarEvent[]
 
   @@index([userId])
+  @@index([templateId])
   @@map("workouts")
+}
+
+model WorkoutTemplateOnWorkout {
+  id         String @id @default(cuid())
+  workoutId  String
+  templateId String
+
+  workout  Workout         @relation(fields: [workoutId], references: [id])
+  template WorkoutTemplate @relation(fields: [templateId], references: [id])
+
+  @@unique([workoutId, templateId])
+  @@index([templateId])
+  @@map("workout_template_on_workout")
 }
 
 model WorkoutExercise {
@@ -70,8 +86,9 @@ model WorkoutTemplate {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  user              User?              @relation(fields: [userId], references: [id])
+  user              User?                      @relation(fields: [userId], references: [id])
   templateExercises TemplateExercise[]
+  usedInWorkouts    WorkoutTemplateOnWorkout[]
 
   @@index([userId])
   @@map("workout_templates")
@@ -86,7 +103,7 @@ model TemplateExercise {
   template WorkoutTemplate @relation(fields: [templateId], references: [id])
   exercise Exercise        @relation(fields: [exerciseId], references: [id])
 
-  sets TemplateExerciseSet[] // 👈 Yeni ilişki
+  sets TemplateExerciseSet[]
 
   @@index([templateId])
   @@index([exerciseId])
