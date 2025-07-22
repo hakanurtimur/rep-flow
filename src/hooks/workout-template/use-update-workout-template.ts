@@ -13,6 +13,9 @@ export const useUpdateWorkoutTemplate = ({ onSuccess = () => {} }) => {
         }),
         queryClient.invalidateQueries({ queryKey: ["workout-template"] }),
         queryClient.invalidateQueries({ queryKey: ["workout-templates"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["workout-template-options"],
+        }),
       ]);
       onSuccess();
     },

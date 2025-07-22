@@ -4,6 +4,7 @@ import {
   ExtendedWorkoutTemplate,
   UpdateWorkoutTemplateInput,
   WorkoutTemplateList,
+  WorkoutTemplateOption,
 } from "@/zod-schemas/workout-template-schemas";
 
 // GET
@@ -44,4 +45,28 @@ export const createWorkoutTemplate = async (
 // DELETE
 export const deleteWorkoutTemplate = async (id: string) => {
   return api.delete(`workout-template/${id}`);
+};
+
+// GET as options
+export const getWorkoutTemplateOptions = async (): Promise<
+  WorkoutTemplateOption[]
+> => {
+  const res = await api.get<WorkoutTemplateOption[]>(
+    "workout-template/workout-template-options",
+  );
+  return res.data;
+};
+
+// GET multiple templates with details
+export const getWorkoutTemplatesWithDetails = async (
+  ids: string[],
+): Promise<ExtendedWorkoutTemplate[]> => {
+  if (ids.length === 0) {
+    return [];
+  }
+  const query = new URLSearchParams({ ids: ids.join(",") }).toString();
+  const res = await api.get<ExtendedWorkoutTemplate[]>(
+    `/workout-template/with-details?${query}`,
+  );
+  return res.data;
 };

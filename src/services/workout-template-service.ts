@@ -195,3 +195,68 @@ export async function deleteWorkoutTemplate(
     return { success: true };
   });
 }
+
+// GET as options
+export async function getWorkoutTemplateOptions(userId: string) {
+  const templates = await prisma.workoutTemplate.findMany({
+    where: {
+      OR: [{ userId }, { userId: null }],
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      duration: true,
+      difficulty: true,
+      isSystem: true,
+      _count: {
+        select: {
+          templateExercises: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return templates.map((template) => ({
+    id: template.id,
+    name: template.name,
+    description: template.description,
+    duration: template.duration,
+    difficulty: template.difficulty,
+    isSystem: template.isSystem,
+    exerciseCount: template._count.templateExercises,
+  }));
+}
+
+//GET multiple with details
+export async function getWorkoutTemplatesWithDetails(
+  templateIds: string[],
+  userId: string,
+) {
+  return prisma.workoutTemplate.findMany({
+    where: {
+      id: { in: templateIds },
+      OR: [{ userId }, { userId: null }],
+    },
+    include: {
+      templateExercises: {
+        orderBy: { order: "asc" },
+        include: {
+          exercise: {
+            include: {
+              muscleGroupLinks: {
+                include: {
+                  muscleGroup: true,
+                },
+              },
+            },
+          },
+          sets: true,
+        },
+      },
+    },
+  });
+}

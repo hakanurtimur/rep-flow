@@ -7,6 +7,7 @@ import {
 } from "@prisma/client";
 import { z } from "zod";
 import { MuscleGroupWithDifficultySchema } from "@/zod-schemas/muscle-group-schemas";
+import { SetSchema } from "@/zod-schemas/set-schema";
 
 export type ExtendedTemplateExercise = TemplateExercise & {
   exercise: Exercise & {
@@ -27,15 +28,7 @@ export const ExerciseForTemplateSchema = z.object({
   id: z.string().optional(),
   exerciseId: z.string(),
   order: z.number(),
-  sets: z.array(
-    z.object({
-      reps: z.number(),
-      weight: z.number().nonnegative(),
-      duration: z.number().nonnegative(),
-      restTime: z.number().nonnegative(),
-      order: z.number(),
-    }),
-  ),
+  sets: z.array(SetSchema).min(1, "At least one set is required"),
 });
 
 export type ExerciseForTemplateInput = z.infer<

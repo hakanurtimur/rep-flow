@@ -341,7 +341,7 @@ export default function ExerciseDragDrop({
                     ))}
                     {droppedExercise.length === 0 && (
                       <div className="text-center text-muted-foreground py-12 border-2 border-dashed border-border rounded-lg">
-                        Drop cards here to organize them
+                        Drop exercises here to organize them
                       </div>
                     )}
                   </div>

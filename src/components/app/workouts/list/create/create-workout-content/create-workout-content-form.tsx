@@ -1,9 +1,5 @@
 "use client";
 
-import {
-  CreateWorkoutTemplateInput,
-  CreateWorkoutTemplateSchema,
-} from "@/zod-schemas/workout-template-schemas";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -15,48 +11,86 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ExerciseForTemplateInput } from "@/zod-schemas/template-exercise-schemas";
 import {
   BicepsFlexedIcon,
+  DumbbellIcon,
   Edit2Icon,
   FlameIcon,
   TurtleIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
-import { useListExerciseOptions } from "@/hooks/exercise/use-list-exercise-options";
 
 import { WizardForm } from "@/components/ui/wizard-form/wizard-form";
-import ExerciseDragDrop from "@/components/app/workouts/templates/shared/exercise-drag-drop/exercise-drag-drop";
 import LoadingOverlay from "@/components/ui/loading-overlay";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useCreateWorkoutTemplate } from "@/hooks/workout-template/use-create-workout-template";
 import { useRouter } from "next/navigation";
+import {
+  CreateWorkoutInput,
+  CreateWorkoutSchema,
+} from "@/zod-schemas/workout-schemas";
+import WorkoutTemplateDragDrop from "@/components/app/workouts/list/shared/workout-template-drag-drop/workout-template-drag-drop";
+import { useListWorkoutTemplateOptions } from "@/hooks/workout-template/use-list-workout-template-options";
+import ExerciseDragDrop from "@/components/app/workouts/templates/shared/exercise-drag-drop/exercise-drag-drop";
+import { ExerciseForTemplateInput } from "@/zod-schemas/template-exercise-schemas";
+import { useListExerciseOptions } from "@/hooks/exercise/use-list-exercise-options";
+import { useListWorkoutTemplatesWithDetails } from "@/hooks/workout-template/use-list-workout-templates-with-details";
+import { useCreateWorkout } from "@/hooks/workout/use-create-workout";
 
-const CreateTemplateContentForm = () => {
+const CreateWorkoutContentForm = () => {
   const [isExercisePlanSaved, setIsExercisePlanSaved] = useState(true);
-  const router = useRouter();
   const [estimatedValues, setEstimatedValues] = useState<{
     duration: number;
     difficulty: number;
-  }>();
-  const form = useForm<CreateWorkoutTemplateInput>({
-    resolver: zodResolver(CreateWorkoutTemplateSchema),
+  }>({
+    duration: 0,
+    difficulty: 0,
+  });
+  const router = useRouter();
+  const form = useForm<CreateWorkoutInput>({
+    resolver: zodResolver(CreateWorkoutSchema),
     defaultValues: {
       name: "",
       description: "",
-      templateExercises: [],
       duration: 0,
+      exercises: [],
+      templateIds: [],
     },
   });
-
-  const exerciseOptionsQuery = useListExerciseOptions();
-
-  const mutation = useCreateWorkoutTemplate({
+  const mutation = useCreateWorkout({
     onSuccess: () => {
-      toast("Workout Template created successfuly.");
-      router.push("/workouts/templates");
+      toast("Workout created successfuly.");
+      router.push("/workouts/list");
+    },
+  });
+  const templateOptionsQuery = useListWorkoutTemplateOptions();
+  const exerciseOptionsQuery = useListExerciseOptions();
+  const getTemplateDetailsMutation = useListWorkoutTemplatesWithDetails({
+    onSuccess: (data) => {
+      const templateIds = form.getValues("templateIds");
+
+      const exercises = templateIds.flatMap((templateId) => {
+        const template = data.find((t) => t.id === templateId);
+        if (!template) return [];
+
+        return template.templateExercises
+          .sort((a, b) => a.order - b.order)
+          .map((ex) => ({
+            exerciseId: ex.exerciseId,
+            order: ex.order,
+            sets: ex.sets
+              .sort((a, b) => a.order - b.order)
+              .map((s) => ({
+                reps: s.reps,
+                weight: s.weight,
+                duration: s.duration,
+                restTime: s.restTime,
+                order: s.order,
+              })),
+          }));
+      });
+      form.setValue("exercises", exercises);
     },
   });
 
@@ -64,7 +98,7 @@ const CreateTemplateContentForm = () => {
     let duration = 0;
     let difficulty = 0;
 
-    const tes = form.watch("templateExercises") ?? [];
+    const tes = form.watch("exercises") ?? [];
 
     difficulty = 7;
 
@@ -78,9 +112,14 @@ const CreateTemplateContentForm = () => {
       difficulty,
       duration: Math.round(duration / 60),
     });
-  }, [form.watch("templateExercises")]);
+  }, [form.watch("exercises")]);
 
-  if (!exerciseOptionsQuery.data || exerciseOptionsQuery.isPending) {
+  if (
+    !templateOptionsQuery.data ||
+    templateOptionsQuery.isPending ||
+    !exerciseOptionsQuery.data ||
+    exerciseOptionsQuery.isPending
+  ) {
     return (
       <div className="relative min-h-96">
         <LoadingOverlay fullScreen={false} />
@@ -88,13 +127,22 @@ const CreateTemplateContentForm = () => {
     );
   }
 
+  const existedTemplates = form
+    .getValues("templateIds")
+    .map((id) => templateOptionsQuery.data.find((t) => t.id === id))
+    .filter(Boolean);
+
+  const availableTemplateOptions = templateOptionsQuery.data.filter(
+    (t) => !form.getValues("templateIds").includes(t.id),
+  );
+
   return (
     <div>
       <WizardForm
         steps={[
           {
             id: 1,
-            title: "Template Information",
+            title: "Workout Information",
             components: [
               <FormField
                 key={"name"}
@@ -132,21 +180,43 @@ const CreateTemplateContentForm = () => {
           },
           {
             id: 2,
-            title: "Exercises",
+            title: "Workout Templates",
+            components: [
+              <WorkoutTemplateDragDrop
+                key="template-board"
+                templateOptions={availableTemplateOptions}
+                existedTemplates={existedTemplates.filter(
+                  (i) => i !== undefined,
+                )}
+                onChange={(data) => form.setValue("templateIds", data)}
+              />,
+            ],
+            fields: [],
+            icon: <BicepsFlexedIcon className="w-4 h-4" />,
+            onExtraNext: async () => {
+              await getTemplateDetailsMutation.mutateAsync(
+                form.getValues("templateIds"),
+              );
+              return true;
+            },
+          },
+          {
+            id: 3,
+            title: "Exercises Templates",
             components: [
               <ExerciseDragDrop
                 key="board"
                 exercises={exerciseOptionsQuery.data}
-                existedExercises={form.watch("templateExercises")}
+                existedExercises={form.getValues("exercises")}
                 onChange={(data: ExerciseForTemplateInput[]) =>
-                  form.setValue("templateExercises", data)
+                  form.setValue("exercises", data)
                 }
                 onChangeIsExercisePlanSaved={setIsExercisePlanSaved}
                 isExercisePlanSaved={isExercisePlanSaved}
               />,
             ],
             fields: [],
-            icon: <BicepsFlexedIcon className="w-4 h-4" />,
+            icon: <DumbbellIcon className="w-4 h-4" />,
             onExtraNext: () => {
               if (!isExercisePlanSaved) {
                 toast("Please save your workout plan before next step.", {
@@ -161,7 +231,7 @@ const CreateTemplateContentForm = () => {
             },
           },
           {
-            id: 3,
+            id: 4,
             title: "Duration & Difficulty",
             components: [
               <FormField
@@ -241,10 +311,10 @@ const CreateTemplateContentForm = () => {
         onSubmit={(data) => {
           mutation.mutate(data);
         }}
-        loading={mutation.isPending}
+        loading={mutation.isPending || getTemplateDetailsMutation.isPending}
         onCancel={() => {
           form.reset();
-          router.push("/workouts/templates");
+          router.push("/workouts/list");
         }}
         title={"Create Workout Template"}
       />
@@ -252,4 +322,4 @@ const CreateTemplateContentForm = () => {
   );
 };
 
-export default CreateTemplateContentForm;
+export default CreateWorkoutContentForm;

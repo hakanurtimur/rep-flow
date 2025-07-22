@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
-import { useListExercises } from "@/hooks/exercise/use-list-exercise-options";
+import { useListExerciseOptions } from "@/hooks/exercise/use-list-exercise-options";
 
 import { WizardForm } from "@/components/ui/wizard-form/wizard-form";
 import ExerciseDragDrop from "@/components/app/workouts/templates/shared/exercise-drag-drop/exercise-drag-drop";
@@ -75,7 +75,7 @@ const TemplateDetailsContentEdit = ({
     },
   });
 
-  const exerciseOptionsQuery = useListExercises();
+  const exerciseOptionsQuery = useListExerciseOptions();
 
   const mutation = useUpdateWorkoutTemplate({
     onSuccess: () => {

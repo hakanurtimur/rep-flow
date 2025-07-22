@@ -66,3 +66,15 @@ export const WorkoutListElementTemplateSchema = z.object({
 export type WorkoutListElementTemplate = z.infer<
   typeof WorkoutListElementTemplateSchema
 >;
+
+export const WorkoutTemplateOptionSchema = z.object({
+  id: z.string().cuid(),
+  name: z.string(),
+  description: z.string().nullable(),
+  duration: z.number().int().positive(),
+  difficulty: z.number().int().min(1).max(10),
+  isSystem: z.boolean(),
+  exerciseCount: z.number().int().nonnegative(),
+});
+
+export type WorkoutTemplateOption = z.infer<typeof WorkoutTemplateOptionSchema>;

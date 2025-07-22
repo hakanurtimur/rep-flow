@@ -16,7 +16,6 @@ model Workout {
   duration    Int
   difficulty  Int      @default(1)
   userId      String
-  templateId  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -27,7 +26,6 @@ model Workout {
   CalendarEvent     CalendarEvent[]
 
   @@index([userId])
-  @@index([templateId])
   @@map("workouts")
 }
 
@@ -64,9 +62,9 @@ model WorkoutExerciseSet {
   id                String @id @default(cuid())
   workoutExerciseId String
   reps              Int
-  weight            Float?
-  duration          Int?
-  restTime          Int?
+  weight            Float
+  duration          Int
+  restTime          Int
   order             Int    @default(0)
 
   workoutExercise WorkoutExercise @relation(fields: [workoutExerciseId], references: [id])
@@ -114,9 +112,9 @@ model TemplateExerciseSet {
   id                 String @id @default(cuid())
   templateExerciseId String
   reps               Int
-  weight             Float?
-  duration           Int? // seconds
-  restTime           Int?
+  weight             Float
+  duration           Int
+  restTime           Int
   order              Int    @default(0)
 
   templateExercise TemplateExercise @relation(fields: [templateExerciseId], references: [id])

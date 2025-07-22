@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
-import { getExerciseOptions } from "@/services/exercise-service";
+import { getWorkoutTemplateOptions } from "@/services/workout-template-service";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -14,13 +14,17 @@ export async function GET() {
   }
 
   try {
-    const data = await getExerciseOptions(userId);
+    const data = await getWorkoutTemplateOptions(userId);
     return Response.json(
-      { success: true, data, message: "Exercises fetched successfully" },
+      {
+        success: true,
+        data,
+        message: "Workout templates fetched successfully",
+      },
       { status: 200 },
     );
   } catch (err) {
-    console.error("Error fetching exercises:", err);
+    console.error("Error fetching Workout templates:", err);
     return Response.json(
       { success: false, data: null, message: "Internal server error" },
       { status: 500 },

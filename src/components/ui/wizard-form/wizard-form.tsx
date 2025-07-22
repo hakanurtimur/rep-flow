@@ -15,7 +15,7 @@ export type WizardStep<T extends FieldValues> = {
   icon: ReactElement;
   components: ReactElement[];
   fields: Path<T>[];
-  onExtraNext?: () => boolean;
+  onExtraNext?: () => boolean | Promise<boolean>;
 };
 
 type Props<T extends FieldValues> = {
@@ -53,7 +53,7 @@ export function WizardForm<T extends FieldValues>({
     const valid = await form.trigger(currentStep.fields);
     let isExtraValid = true;
     if (currentStep.onExtraNext !== undefined) {
-      isExtraValid = currentStep.onExtraNext();
+      isExtraValid = await currentStep.onExtraNext();
     }
     if (!valid || !isExtraValid) return;
     setStepIndex((prev) => prev + 1);
