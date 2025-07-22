@@ -1,4 +1,3 @@
-import { WorkoutTemplateList } from "@/zod-schemas/workout-template-schemas";
 import MotionContainerY from "@/components/motioned-components/motion-container-y";
 import {
   Table,
@@ -7,26 +6,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import TemplateListItem from "@/components/app/workouts/templates/template-list-item";
+import { WorkoutListElement } from "@/zod-schemas/workout-schemas";
+import WorkoutListItem from "@/components/app/workouts/list/workout-list-item";
 
 interface Props {
-  templates: WorkoutTemplateList[];
+  workouts: WorkoutListElement[];
   viewVariant: "card" | "list";
 }
 
-const TemplateList = ({ templates, viewVariant }: Props) => {
+const WorkoutList = ({ workouts, viewVariant }: Props) => {
   return (
     <>
       {viewVariant === "card" ? (
         <MotionContainerY key={"card"} className="grid grid-cols-3 gap-4">
-          {templates.map((template) => (
-            <div key={template.id}>
-              <TemplateListItem viewVariant={viewVariant} template={template} />
+          {workouts.map((workout) => (
+            <div key={workout.id}>
+              <WorkoutListItem viewVariant={viewVariant} workout={workout} />
             </div>
           ))}
         </MotionContainerY>
       ) : (
-        <MotionContainerY key={"list"} className="max-w-7xl">
+        <MotionContainerY key={"list"} className="max-w-6xl">
           <Table className="max-w-full w-full!">
             <TableHeader>
               <TableRow>
@@ -35,18 +35,17 @@ const TemplateList = ({ templates, viewVariant }: Props) => {
                 <TableHead></TableHead>
                 <TableHead>Exercises</TableHead>
                 <TableHead>Difficulty</TableHead>
-                <TableHead>Duration</TableHead>
                 <TableHead>
                   <div className="flex items-center justify-end">Actions</div>
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {templates.map((template) => (
-                <TemplateListItem
-                  key={template.id}
+              {workouts.map((workout) => (
+                <WorkoutListItem
+                  key={workout.id}
                   viewVariant={viewVariant}
-                  template={template}
+                  workout={workout}
                 />
               ))}
             </TableBody>
@@ -57,4 +56,4 @@ const TemplateList = ({ templates, viewVariant }: Props) => {
   );
 };
 
-export default TemplateList;
+export default WorkoutList;

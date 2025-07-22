@@ -28,7 +28,6 @@ const TemplateDetailsContentPreview = ({ template }: Props) => {
 
         {template.isSystem && (
           <>
-            {" "}
             <Badge variant={"destructive"}>Not Editable</Badge>
             <Separator
               orientation={"vertical"}

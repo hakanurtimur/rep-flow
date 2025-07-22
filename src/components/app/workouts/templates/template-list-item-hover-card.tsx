@@ -17,7 +17,7 @@ const TemplateListItemHoverCard = ({ template }: Props) => {
       <HoverCardTrigger className="flex gap-2 items-center text-sm font-semibold cursor-pointer">
         <Badge variant="secondary">
           <BicepsFlexedIcon className="w-4 h-4 fill-secondary-foreground" />
-          <span>Exercises</span>
+          <span>{template.templateExercises.length} Exercises</span>
         </Badge>
       </HoverCardTrigger>
       <HoverCardContent className="flex max-w-md flex-col gap-2">

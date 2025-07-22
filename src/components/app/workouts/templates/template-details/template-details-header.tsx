@@ -15,12 +15,14 @@ interface Props {
   template: ExtendedWorkoutTemplate;
   viewVariant: "edit" | "preview";
   onViewVariantChange: (variant: "edit" | "preview") => void;
+  byParam: string | null;
 }
 
 const TemplateDetailsHeader = ({
   template,
   viewVariant,
   onViewVariantChange,
+  byParam,
 }: Props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const router = useRouter();
@@ -69,9 +71,9 @@ const TemplateDetailsHeader = ({
           </ExpandableButton>
         ))}
       </div>
-      <Link href={"/workouts/templates"}>
+      <Link href={byParam ?? "/workouts/templates"}>
         <Button>
-          <ArrowLeftIcon /> Back To Templates
+          <ArrowLeftIcon /> {byParam ? "Back" : "Back To Templates"}
         </Button>
       </Link>
     </PageBodyInnerHeader>

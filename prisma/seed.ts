@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const userId = "9431cee5-11dd-4fb3-b2c6-c820d0c469fa";
+  const userId = "9a3f3b18-76d8-49ac-b623-6bf8651bd3df";
 
   // 1. Temizlik
   await prisma.workoutTemplateOnWorkout.deleteMany();

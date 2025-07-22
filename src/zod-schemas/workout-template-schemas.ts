@@ -54,3 +54,15 @@ export const CreateWorkoutTemplateSchema = UpdateWorkoutTemplateSchema.omit({
 export type CreateWorkoutTemplateInput = z.infer<
   typeof CreateWorkoutTemplateSchema
 >;
+
+export const WorkoutListElementTemplateSchema = z.object({
+  template: z.object({
+    id: z.string(),
+    name: z.string(),
+    isSystem: z.boolean(),
+  }),
+});
+
+export type WorkoutListElementTemplate = z.infer<
+  typeof WorkoutListElementTemplateSchema
+>;

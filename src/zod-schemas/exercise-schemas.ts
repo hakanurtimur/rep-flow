@@ -39,3 +39,19 @@ export const ExerciseOptionSchema = z.object({
 });
 
 export type ExerciseOption = z.infer<typeof ExerciseOptionSchema>;
+
+export const WorkoutListElementExerciseSchema = z.object({
+  id: z.string(),
+  exercise: z.object({
+    name: z.string(),
+  }),
+  sets: z.array(
+    z.object({
+      id: z.string(),
+    }),
+  ),
+});
+
+export type WorkoutListElementExercise = z.infer<
+  typeof WorkoutListElementExerciseSchema
+>;
