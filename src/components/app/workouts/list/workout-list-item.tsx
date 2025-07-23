@@ -12,13 +12,14 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import { EyeIcon, TimerIcon } from "lucide-react";
+import { CalendarPlusIcon, EyeIcon, TimerIcon } from "lucide-react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import DifficultyRating from "@/components/ui/difficulty-rating";
 import Link from "next/link";
 import { WorkoutListElement } from "@/zod-schemas/workout-schemas";
 import { Separator } from "@/components/ui/separator";
 import WorkoutListItemHoverCard from "@/components/app/workouts/list/workout-list-item-hover-card";
+import ScheduleWorkoutDialog from "@/components/app/workouts/list/schedule-workout-dialog/schedule-workout-dialog";
 
 interface Props {
   workout: WorkoutListElement;
@@ -32,19 +33,32 @@ const WorkoutListItem = ({ workout, viewVariant }: Props) => {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>{workout.name}</CardTitle>
+              <CardTitle className="flex-1">{workout.name}</CardTitle>
 
               <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link href={`/workouts/list/${workout.id}`}>
-                      <Button size="icon" variant={"ghost"}>
-                        <EyeIcon />
-                      </Button>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent>See Details & Update</TooltipContent>
-                </Tooltip>
+                <div className="flex items-center gap-2">
+                  <Tooltip>
+                    <ScheduleWorkoutDialog workoutId={workout.id}>
+                      <TooltipTrigger asChild>
+                        <Button size="icon" variant={"tertiary"}>
+                          <CalendarPlusIcon />
+                        </Button>
+                      </TooltipTrigger>
+                    </ScheduleWorkoutDialog>
+
+                    <TooltipContent>Schedule Workout</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link href={`/workouts/list/${workout.id}`}>
+                        <Button size="icon" variant={"ghost"}>
+                          <EyeIcon />
+                        </Button>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>See Details & Update</TooltipContent>
+                  </Tooltip>
+                </div>
               </TooltipProvider>
             </div>
             <CardDescription>{workout.description}</CardDescription>
@@ -86,8 +100,19 @@ const WorkoutListItem = ({ workout, viewVariant }: Props) => {
           <TableCell>
             <DifficultyRating value={workout.difficulty} />
           </TableCell>
-          <TableCell className="flex items-center justify-end">
+          <TableCell className="flex items-center justify-end gap-2">
             <TooltipProvider>
+              <Tooltip>
+                <ScheduleWorkoutDialog workoutId={workout.id}>
+                  <TooltipTrigger asChild>
+                    <Button size="icon" variant={"tertiary"}>
+                      <CalendarPlusIcon />
+                    </Button>
+                  </TooltipTrigger>
+                </ScheduleWorkoutDialog>
+
+                <TooltipContent>Schedule Workout</TooltipContent>
+              </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link href={`/workouts/list/${workout.id}`}>
@@ -96,6 +121,7 @@ const WorkoutListItem = ({ workout, viewVariant }: Props) => {
                     </Button>
                   </Link>
                 </TooltipTrigger>
+                <TooltipContent>See Details & Update</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </TableCell>

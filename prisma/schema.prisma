@@ -290,8 +290,10 @@ model CalendarEvent {
   date        DateTime
   workoutId   String?
   nutritionId String?   @unique
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  colorKey    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user      User          @relation(fields: [userId], references: [id])
   workout   Workout?      @relation(fields: [workoutId], references: [id])
