@@ -1,59 +1,60 @@
 import { PageBodyInnerHeader } from "@/components/layout-related/page-body-inner-header";
 import React, { useState } from "react";
-import { ExtendedWorkoutTemplate } from "@/zod-schemas/workout-template-schemas";
 import { Edit2Icon, EyeIcon } from "lucide-react";
 import ExpandableButton from "@/components/ui/expandable-button";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import DeleteAlertDialog from "@/components/delete-alert-dialog";
-import { useDeleteWorkoutTemplate } from "@/hooks/workout-template/use-delete-workout-template";
-import { toast } from "sonner";
+import { ExtendedWorkout } from "@/zod-schemas/workout-schemas";
+import { useDeleteWorkout } from "@/hooks/workout/use-delete-workout";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface Props {
-  template: ExtendedWorkoutTemplate;
+  workout: ExtendedWorkout;
   viewVariant: "edit" | "preview";
   onViewVariantChange: (variant: "edit" | "preview") => void;
   byParam: string | null;
 }
 
-const TemplateDetailsHeader = ({
-  template,
+const viewVariants = [
+  { mode: "preview", label: "Preview", icon: EyeIcon },
+  { mode: "edit", label: "Edit", icon: Edit2Icon },
+];
+
+const WorkoutDetailsHeader = ({
+  workout,
   viewVariant,
   onViewVariantChange,
   byParam,
 }: Props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const router = useRouter();
-  const mutation = useDeleteWorkoutTemplate({
+
+  const mutation = useDeleteWorkout({
     onSuccess: () => {
       toast("Workout deleted succesfully");
-      router.push("/workouts/templates");
+      router.push("/workouts/list");
     },
   });
-  const viewVariants = template.isSystem
-    ? [{ mode: "preview", label: "Preview", icon: EyeIcon }]
-    : [
-        { mode: "preview", label: "Preview", icon: EyeIcon },
-        { mode: "edit", label: "Edit", icon: Edit2Icon },
-      ];
 
   return (
-    <PageBodyInnerHeader title={template.name}>
-      {!template.isSystem && viewVariant === "edit" && (
+    <PageBodyInnerHeader title={workout.name}>
+      {viewVariant === "edit" && (
         <DeleteAlertDialog
-          onDelete={() => mutation.mutate(template.id)}
-          title={"Delete Workout Template"}
+          onDelete={() => mutation.mutate(workout.id)}
+          title={"Delete Workout"}
           description={
-            "Are you sure you want to delete this workout template? This action cannot be undone."
+            "Are you sure you want to delete this workout? This action cannot be undone."
           }
           disabled={mutation.isPending}
           loading={mutation.isPending}
           isOpen={isDeleteDialogOpen}
           onOpenChange={setIsDeleteDialogOpen}
+          customError={mutation.error?.message}
         >
-          <Button variant="destructive">Delete Workout Template</Button>
+          <Button variant="destructive">Delete Workout</Button>
         </DeleteAlertDialog>
       )}
       <div className="flex shadow-xs border rounded-md items-center justify-end">
@@ -71,13 +72,13 @@ const TemplateDetailsHeader = ({
           </ExpandableButton>
         ))}
       </div>
-      <Link href={byParam ?? "/workouts/templates"}>
+      <Link href={byParam ?? "/workouts/list"}>
         <Button>
-          <ArrowLeftIcon /> {byParam ? "Back" : "Back To Templates"}
+          <ArrowLeftIcon /> {byParam ? "Back" : "Back To Workouts"}
         </Button>
       </Link>
     </PageBodyInnerHeader>
   );
 };
 
-export default TemplateDetailsHeader;
+export default WorkoutDetailsHeader;

@@ -34,3 +34,93 @@ export const CreateWorkoutSchema = z.object({
 });
 
 export type CreateWorkoutInput = z.infer<typeof CreateWorkoutSchema>;
+
+export type ExtendedWorkout = {
+  id: string;
+  name: string;
+  description?: string | null;
+  duration: number;
+  difficulty: number;
+  createdAt: string;
+  updatedAt: string;
+  exercises: {
+    id: string;
+    order: number;
+    exercise: {
+      id: string;
+      name: string;
+      description?: string | null;
+      isSystem: boolean;
+      totalDifficulty: number;
+      muscleGroupLinks: {
+        muscleGroup: {
+          id: string;
+          name: string;
+          isSystem: boolean;
+        };
+      }[];
+    };
+    sets: {
+      id: string;
+      reps: number;
+      weight: number;
+      duration: number;
+      restTime: number;
+      order: number;
+    }[];
+  }[];
+  templates: {
+    template: {
+      id: string;
+      name: string;
+      description?: string | null;
+      duration: number;
+      difficulty: number;
+      isSystem: boolean;
+      templateExercises: {
+        id: string;
+        order: number;
+        exercise: {
+          id: string;
+          name: string;
+          muscleGroupLinks: {
+            muscleGroup: {
+              id: string;
+              name: string;
+            };
+          }[];
+        };
+        sets: {
+          id: string;
+          reps: number;
+          weight: number;
+          duration: number;
+          restTime: number;
+          order: number;
+        }[];
+      }[];
+    };
+  }[];
+  scheduledWorkouts: {
+    id: string;
+    scheduledAt: string;
+    completed: boolean;
+  }[];
+  CalendarEvent: {
+    id: string;
+    date: string;
+    type: "WORKOUT" | "NUTRITION";
+  }[];
+  user: {
+    id: string;
+    email: string;
+    firstName?: string | null;
+    lastName?: string | null;
+  };
+};
+
+export const UpdateWorkoutSchema = CreateWorkoutSchema.extend({
+  id: z.string().cuid("Workout ID is required"),
+});
+
+export type UpdateWorkoutInput = z.infer<typeof UpdateWorkoutSchema>;

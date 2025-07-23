@@ -36,8 +36,7 @@ export async function getWorkoutTemplates(userId: string) {
 export async function getWorkoutTemplateById(id: string, userId: string) {
   return prisma.workoutTemplate.findFirst({
     where: {
-      id,
-      OR: [{ userId }, { userId: null }],
+      AND: [{ id }, { OR: [{ userId }, { userId: null }] }],
     },
     include: {
       templateExercises: {
@@ -64,7 +63,12 @@ export async function updateWorkoutTemplate(
 ) {
   return prisma.$transaction(async (tx) => {
     await tx.workoutTemplate.update({
-      where: { id: id, userId: userId },
+      where: {
+        id_userId: {
+          id,
+          userId,
+        },
+      },
       data: {
         name: data.name,
         description: data.description,
@@ -167,33 +171,16 @@ export async function deleteWorkoutTemplate(
   templateId: string,
   userId: string,
 ) {
-  return prisma.$transaction(async (tx) => {
-    const exercises = await tx.templateExercise.findMany({
-      where: { templateId },
-      select: { id: true },
-    });
-
-    const templateExerciseIds = exercises.map((e) => e.id);
-
-    await tx.templateExerciseSet.deleteMany({
-      where: {
-        templateExerciseId: { in: templateExerciseIds },
-      },
-    });
-
-    await tx.templateExercise.deleteMany({
-      where: { templateId },
-    });
-
-    await tx.workoutTemplate.delete({
-      where: {
+  await prisma.workoutTemplate.delete({
+    where: {
+      id_userId: {
         id: templateId,
         userId,
       },
-    });
-
-    return { success: true };
+    },
   });
+
+  return { success: true };
 }
 
 // GET as options
@@ -238,8 +225,10 @@ export async function getWorkoutTemplatesWithDetails(
 ) {
   return prisma.workoutTemplate.findMany({
     where: {
-      id: { in: templateIds },
-      OR: [{ userId }, { userId: null }],
+      AND: [
+        { id: { in: templateIds } },
+        { OR: [{ userId }, { userId: null }] },
+      ],
     },
     include: {
       templateExercises: {

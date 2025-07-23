@@ -33,6 +33,7 @@ const WorkoutListItem = ({ workout, viewVariant }: Props) => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>{workout.name}</CardTitle>
+
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>

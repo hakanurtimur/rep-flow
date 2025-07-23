@@ -25,6 +25,7 @@ model Workout {
   scheduledWorkouts ScheduledWorkout[]
   CalendarEvent     CalendarEvent[]
 
+  @@unique([id, userId])
   @@index([userId])
   @@map("workouts")
 }
@@ -34,8 +35,8 @@ model WorkoutTemplateOnWorkout {
   workoutId  String
   templateId String
 
-  workout  Workout         @relation(fields: [workoutId], references: [id])
-  template WorkoutTemplate @relation(fields: [templateId], references: [id])
+  workout  Workout         @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  template WorkoutTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
 
   @@unique([workoutId, templateId])
   @@index([templateId])
@@ -67,7 +68,7 @@ model WorkoutExerciseSet {
   restTime          Int
   order             Int    @default(0)
 
-  workoutExercise WorkoutExercise @relation(fields: [workoutExerciseId], references: [id])
+  workoutExercise WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
 
   @@index([workoutExerciseId])
   @@map("workout_exercise_set")
@@ -88,6 +89,7 @@ model WorkoutTemplate {
   templateExercises TemplateExercise[]
   usedInWorkouts    WorkoutTemplateOnWorkout[]
 
+  @@unique([id, userId])
   @@index([userId])
   @@map("workout_templates")
 }
@@ -98,7 +100,7 @@ model TemplateExercise {
   exerciseId String
   order      Int    @default(0)
 
-  template WorkoutTemplate @relation(fields: [templateId], references: [id])
+  template WorkoutTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
   exercise Exercise        @relation(fields: [exerciseId], references: [id])
 
   sets TemplateExerciseSet[]
@@ -117,7 +119,7 @@ model TemplateExerciseSet {
   restTime           Int
   order              Int    @default(0)
 
-  templateExercise TemplateExercise @relation(fields: [templateExerciseId], references: [id])
+  templateExercise TemplateExercise @relation(fields: [templateExerciseId], references: [id], onDelete: Cascade)
 
   @@index([templateExerciseId])
   @@map("template_exercise_set")
@@ -222,6 +224,7 @@ model HealthMetric {
   water     Int? // cups
   stress    Int? // 1-10
   energy    Int? // 1-10
+  steps     Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -253,7 +256,7 @@ model Exercise {
 
 model ExerciseMuscleGroup {
   id            String      @id @default(cuid())
-  exercise      Exercise    @relation(fields: [exerciseId], references: [id])
+  exercise      Exercise    @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
   exerciseId    String
   muscleGroup   MuscleGroup @relation(fields: [muscleGroupId], references: [id])
   muscleGroupId String

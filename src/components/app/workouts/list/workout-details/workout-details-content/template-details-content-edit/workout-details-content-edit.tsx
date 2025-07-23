@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ExerciseForTemplateInput } from "@/zod-schemas/template-exercise-schemas";
 import {
   BicepsFlexedIcon,
   DumbbellIcon,
@@ -20,25 +21,29 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
+import { useListExerciseOptions } from "@/hooks/exercise/use-list-exercise-options";
 
 import { WizardForm } from "@/components/ui/wizard-form/wizard-form";
+import ExerciseDragDrop from "@/components/app/workouts/templates/shared/exercise-drag-drop/exercise-drag-drop";
 import LoadingOverlay from "@/components/ui/loading-overlay";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import {
-  CreateWorkoutInput,
-  CreateWorkoutSchema,
+  ExtendedWorkout,
+  UpdateWorkoutInput,
+  UpdateWorkoutSchema,
 } from "@/zod-schemas/workout-schemas";
-import WorkoutTemplateDragDrop from "@/components/app/workouts/list/shared/workout-template-drag-drop/workout-template-drag-drop";
+import { useUpdateWorkout } from "@/hooks/workout/use-update-workout";
 import { useListWorkoutTemplateOptions } from "@/hooks/workout-template/use-list-workout-template-options";
-import ExerciseDragDrop from "@/components/app/workouts/templates/shared/exercise-drag-drop/exercise-drag-drop";
-import { ExerciseForTemplateInput } from "@/zod-schemas/template-exercise-schemas";
-import { useListExerciseOptions } from "@/hooks/exercise/use-list-exercise-options";
 import { useListWorkoutTemplatesWithDetails } from "@/hooks/workout-template/use-list-workout-templates-with-details";
-import { useCreateWorkout } from "@/hooks/workout/use-create-workout";
+import WorkoutTemplateDragDrop from "@/components/app/workouts/list/shared/workout-template-drag-drop/workout-template-drag-drop";
 
-const CreateWorkoutContentForm = () => {
+interface Props {
+  workout: ExtendedWorkout;
+  onViewVariantChange: (variant: "edit" | "preview") => void;
+}
+
+const WorkoutDetailsContentEdit = ({ workout, onViewVariantChange }: Props) => {
   const [isExercisePlanSaved, setIsExercisePlanSaved] = useState(true);
   const [estimatedValues, setEstimatedValues] = useState<{
     duration: number;
@@ -47,21 +52,25 @@ const CreateWorkoutContentForm = () => {
     duration: 0,
     difficulty: 0,
   });
-  const router = useRouter();
-  const form = useForm<CreateWorkoutInput>({
-    resolver: zodResolver(CreateWorkoutSchema),
+  const form = useForm<UpdateWorkoutInput>({
+    resolver: zodResolver(UpdateWorkoutSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      duration: 0,
-      exercises: [],
-      templateIds: [],
+      id: workout.id,
+      name: workout.name,
+      description: workout.description ?? "",
+      duration: workout.duration,
+      difficulty: workout.difficulty,
+      templateIds: workout.templates.map((t) => {
+        return t.template.id;
+      }),
+      exercises: workout.exercises,
     },
   });
-  const mutation = useCreateWorkout({
+
+  const mutation = useUpdateWorkout({
     onSuccess: () => {
-      toast("Workout created successfuly.");
-      router.push("/workouts/list");
+      toast("Workout Template Updated successfuly.");
+      onViewVariantChange("preview");
     },
   });
   const templateOptionsQuery = useListWorkoutTemplateOptions();
@@ -150,7 +159,7 @@ const CreateWorkoutContentForm = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem className="w-1/2">
-                    <FormLabel>Workout Name</FormLabel>
+                    <FormLabel>Workout Template Name</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -314,12 +323,12 @@ const CreateWorkoutContentForm = () => {
         loading={mutation.isPending || getTemplateDetailsMutation.isPending}
         onCancel={() => {
           form.reset();
-          router.push("/workouts/list");
+          onViewVariantChange("preview");
         }}
-        title={"Create Workout"}
+        title={"Edit Workout"}
       />
     </div>
   );
 };
 
-export default CreateWorkoutContentForm;
+export default WorkoutDetailsContentEdit;
