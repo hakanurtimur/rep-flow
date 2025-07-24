@@ -1,7 +1,7 @@
 import { PageBodyInnerHeader } from "@/components/layout-related/page-body-inner-header";
 import React, { useState } from "react";
 import { ExtendedWorkoutTemplate } from "@/zod-schemas/workout-template-schemas";
-import { Edit2Icon, EyeIcon } from "lucide-react";
+import { EditIcon, EyeIcon } from "lucide-react";
 import ExpandableButton from "@/components/ui/expandable-button";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -15,14 +15,14 @@ interface Props {
   template: ExtendedWorkoutTemplate;
   viewVariant: "edit" | "preview";
   onViewVariantChange: (variant: "edit" | "preview") => void;
-  byParam: string | null;
+  fromParam: string | null;
 }
 
 const TemplateDetailsHeader = ({
   template,
   viewVariant,
   onViewVariantChange,
-  byParam,
+  fromParam,
 }: Props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const router = useRouter();
@@ -36,7 +36,7 @@ const TemplateDetailsHeader = ({
     ? [{ mode: "preview", label: "Preview", icon: EyeIcon }]
     : [
         { mode: "preview", label: "Preview", icon: EyeIcon },
-        { mode: "edit", label: "Edit", icon: Edit2Icon },
+        { mode: "edit", label: "Edit", icon: EditIcon },
       ];
 
   return (
@@ -71,9 +71,9 @@ const TemplateDetailsHeader = ({
           </ExpandableButton>
         ))}
       </div>
-      <Link href={byParam ?? "/workouts/templates"}>
+      <Link href={fromParam ?? "/workouts/templates"}>
         <Button>
-          <ArrowLeftIcon /> {byParam ? "Back" : "Back To Templates"}
+          <ArrowLeftIcon /> {fromParam ? "Back" : "Back To Templates"}
         </Button>
       </Link>
     </PageBodyInnerHeader>

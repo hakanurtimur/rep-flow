@@ -13,7 +13,7 @@ const TemplateDetails = () => {
   const [viewVariant, setViewVariant] = useState<"preview" | "edit">("preview");
   const searchParams = useSearchParams();
 
-  const byParam = searchParams.get("by");
+  const fromParam = searchParams.get("from");
 
   const query = useGetWorkoutTemplate(templateId as string);
 
@@ -31,7 +31,7 @@ const TemplateDetails = () => {
         template={query.data}
         viewVariant={viewVariant}
         onViewVariantChange={handleViewVariantChange}
-        byParam={byParam}
+        fromParam={fromParam}
       />
       <TemplateDetailsContent
         template={query.data}

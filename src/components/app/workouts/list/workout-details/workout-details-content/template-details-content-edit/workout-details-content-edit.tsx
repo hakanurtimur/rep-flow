@@ -15,7 +15,7 @@ import { ExerciseForTemplateInput } from "@/zod-schemas/template-exercise-schema
 import {
   BicepsFlexedIcon,
   DumbbellIcon,
-  Edit2Icon,
+  EditIcon,
   FlameIcon,
   TurtleIcon,
 } from "lucide-react";
@@ -185,7 +185,7 @@ const WorkoutDetailsContentEdit = ({ workout, onViewVariantChange }: Props) => {
               />,
             ],
             fields: ["name", "description"],
-            icon: <Edit2Icon className="w-4 h-4" />,
+            icon: <EditIcon className="w-4 h-4" />,
           },
           {
             id: 2,

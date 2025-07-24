@@ -1,6 +1,6 @@
 import { PageBodyInnerHeader } from "@/components/layout-related/page-body-inner-header";
 import React, { useState } from "react";
-import { Edit2Icon, EyeIcon } from "lucide-react";
+import { EditIcon, EyeIcon } from "lucide-react";
 import ExpandableButton from "@/components/ui/expandable-button";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -15,19 +15,19 @@ interface Props {
   workout: ExtendedWorkout;
   viewVariant: "edit" | "preview";
   onViewVariantChange: (variant: "edit" | "preview") => void;
-  byParam: string | null;
+  fromParam: string | null;
 }
 
 const viewVariants = [
   { mode: "preview", label: "Preview", icon: EyeIcon },
-  { mode: "edit", label: "Edit", icon: Edit2Icon },
+  { mode: "edit", label: "Edit", icon: EditIcon },
 ];
 
 const WorkoutDetailsHeader = ({
   workout,
   viewVariant,
   onViewVariantChange,
-  byParam,
+  fromParam,
 }: Props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const router = useRouter();
@@ -72,9 +72,10 @@ const WorkoutDetailsHeader = ({
           </ExpandableButton>
         ))}
       </div>
-      <Link href={byParam ?? "/workouts/list"}>
+      <Link href={fromParam ?? "/workouts/list"}>
         <Button>
-          <ArrowLeftIcon /> {byParam ? "Back" : "Back To Workouts"}
+          <ArrowLeftIcon />{" "}
+          {fromParam ? "Scheduled Workouts" : "Back To Workouts"}
         </Button>
       </Link>
     </PageBodyInnerHeader>

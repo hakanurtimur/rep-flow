@@ -1,5 +1,16 @@
-import { CreateScheduledWorkoutInput } from "@/zod-schemas/scheduled-workout-schemas";
+import {
+  CreateScheduledWorkoutInput,
+  ScheduledWorkoutListElement,
+} from "@/zod-schemas/scheduled-workout-schemas";
 import api from "@/lib/axios-client";
+
+// GET
+export const getScheduledWorkouts = async (): Promise<
+  ScheduledWorkoutListElement[]
+> => {
+  const res = await api.get<ScheduledWorkoutListElement[]>("scheduled-workout");
+  return res.data;
+};
 
 // POST
 export const createScheduledWorkout = async (

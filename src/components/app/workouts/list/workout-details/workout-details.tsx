@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import PageBodyInnerContainer from "@/components/layout-related/page-body-inner-container";
 import LoadingOverlay from "@/components/ui/loading-overlay";
 import { useState } from "react";
@@ -11,9 +11,8 @@ import WorkoutDetailsContent from "@/components/app/workouts/list/workout-detail
 const WorkoutDetails = () => {
   const { workoutId } = useParams();
   const [viewVariant, setViewVariant] = useState<"preview" | "edit">("preview");
-  // const searchParams = useSearchParams();
-  //
-  // const byParam = searchParams.get("by");
+  const searchParams = useSearchParams();
+  const fromParam = searchParams.get("from");
 
   const query = useGetWorkout(workoutId as string);
   console.log(query);
@@ -32,7 +31,7 @@ const WorkoutDetails = () => {
         workout={query.data}
         viewVariant={viewVariant}
         onViewVariantChange={handleViewVariantChange}
-        byParam={null}
+        fromParam={fromParam}
       />
       <WorkoutDetailsContent
         workout={query.data}

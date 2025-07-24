@@ -22,3 +22,20 @@ export const CreateScheduledWorkoutSchema = z.object({
 export type CreateScheduledWorkoutInput = z.infer<
   typeof CreateScheduledWorkoutSchema
 >;
+
+export const ScheduledWorkoutListElementSchema = z.object({
+  id: z.string(),
+  scheduledAt: z.coerce.date(),
+  completed: z.boolean(),
+  workout: z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string().nullable(),
+    duration: z.number(),
+    difficulty: z.number(),
+  }),
+});
+
+export type ScheduledWorkoutListElement = z.infer<
+  typeof ScheduledWorkoutListElementSchema
+>;

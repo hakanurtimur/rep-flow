@@ -25,7 +25,7 @@ import {
   ActivityIcon,
   BicepsFlexedIcon,
   DumbbellIcon,
-  Edit2Icon,
+  EditIcon,
   EyeIcon,
   TimerIcon,
   X,
@@ -56,7 +56,7 @@ const viewVariants = [
   {
     mode: "edit",
     label: "Edit",
-    icon: Edit2Icon,
+    icon: EditIcon,
   },
 ];
 

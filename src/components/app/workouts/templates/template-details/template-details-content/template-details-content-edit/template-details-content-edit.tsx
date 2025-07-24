@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ExerciseForTemplateInput } from "@/zod-schemas/template-exercise-schemas";
 import {
   BicepsFlexedIcon,
-  Edit2Icon,
+  EditIcon,
   FlameIcon,
   TurtleIcon,
 } from "lucide-react";
@@ -152,7 +152,7 @@ const TemplateDetailsContentEdit = ({
               />,
             ],
             fields: ["name", "description"],
-            icon: <Edit2Icon className="w-4 h-4" />,
+            icon: <EditIcon className="w-4 h-4" />,
           },
           {
             id: 2,

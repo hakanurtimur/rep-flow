@@ -29,7 +29,7 @@ const WorkoutListItemHoverCard = ({ workout }: Props) => {
               {workout.templates.map((template) => (
                 <Link
                   key={template.template.id}
-                  href={`/workouts/templates/${template.template.id}?by=/workouts/list`}
+                  href={`/workouts/templates/${template.template.id}?from=/workouts/list`}
                 >
                   <Badge variant="tertiary">
                     <MousePointer2Icon className="w-4 h-4 fill-tertiary-foreground" />
