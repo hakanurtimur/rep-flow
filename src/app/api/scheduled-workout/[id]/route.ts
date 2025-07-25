@@ -3,7 +3,9 @@ import { authOptions } from "@/lib/auth-options";
 import {
   deleteScheduledWorkout,
   updateScheduledWorkout,
+  updateScheduledWorkoutStatus,
 } from "@/services/scheduled-workout-service";
+import { UpdateScheduledWorkoutStatusSchema } from "@/zod-schemas/scheduled-workout-schemas";
 
 export async function PUT(
   req: Request,
@@ -90,6 +92,57 @@ export async function DELETE(
     console.error("Unexpected error:", err);
     return Response.json(
       { success: false, data: null, message: "Internal server error" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return Response.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 },
+    );
+  }
+
+  const { id } = await params;
+  const body = await req.json();
+
+  const parsed = UpdateScheduledWorkoutStatusSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return Response.json(
+      { success: false, message: "Invalid data" },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const updated = await updateScheduledWorkoutStatus(userId, id, parsed.data);
+    return Response.json(
+      {
+        success: true,
+        data: updated,
+        message: "Scheduled workout status updated",
+      },
+      { status: 200 },
+    );
+  } catch (err: any) {
+    if (err.code === "NOT_FOUND") {
+      return Response.json(
+        { success: false, message: err.message },
+        { status: 404 },
+      );
+    }
+
+    return Response.json(
+      { success: false, message: "Internal server error" },
       { status: 500 },
     );
   }

@@ -22,7 +22,9 @@ export default function EditScheduledWorkoutDialog({ children, model }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogTrigger className="justify-start" asChild>
+        {children}
+      </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Edit Scheduled Workout</DialogTitle>

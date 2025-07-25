@@ -13,22 +13,20 @@ import {
 import {
   CalendarIcon,
   ClockIcon,
-  EditIcon,
+  EllipsisIcon,
   MousePointer2Icon,
   TimerIcon,
 } from "lucide-react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import DifficultyRating from "@/components/ui/difficulty-rating";
 import { Separator } from "@/components/ui/separator";
-import {
-  EventColorKey,
-  ScheduledWorkoutListElement,
-} from "@/zod-schemas/scheduled-workout-schemas";
+import { ScheduledWorkoutListElement } from "@/zod-schemas/scheduled-workout-schemas";
 import { format } from "date-fns";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import EditScheduledWorkoutDialog from "@/components/app/workouts/scheduled/edit-scheduled-workout-dialog/edit-scheduled-workout-dialog";
 import { eventColorMap } from "@/lib/event-color-map";
+import ScheduledWorkoutListItemActionDropdown from "@/components/app/workouts/scheduled/scheduled-workout-list-item-action-dropdown";
+import { Badge } from "@/components/ui/badge";
 
 interface Props {
   scheduledWorkout: ScheduledWorkoutListElement;
@@ -50,11 +48,19 @@ const ScheduledWorkoutListItem = ({ scheduledWorkout, viewVariant }: Props) => {
     <>
       {viewVariant === "card" ? (
         <Card
+          className="relative"
           style={{
             backgroundColor: `var(${bg})`,
             color: `var(${fg})`,
           }}
         >
+          <Badge
+            variant={scheduledWorkout.completed ? "tertiary" : "secondary"}
+            className="absolute bottom-6 right-5"
+          >
+            {scheduledWorkout.completed ? "Completed" : "Planned"}
+          </Badge>
+
           <CardHeader>
             <div className="flex items-center justify-between">
               <TooltipProvider>
@@ -77,27 +83,13 @@ const ScheduledWorkoutListItem = ({ scheduledWorkout, viewVariant }: Props) => {
                   <TooltipContent>Go To Workout Details</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <EditScheduledWorkoutDialog
-                      model={{
-                        id: scheduledWorkout.id,
-                        scheduledAt: scheduledWorkout.scheduledAt,
-                        workoutId: scheduledWorkout.workout.id,
-                        colorKey:
-                          (scheduledWorkout.calendarEvent
-                            .colorKey as EventColorKey) ?? undefined,
-                      }}
-                    >
-                      <Button size="icon" variant={"ghost"}>
-                        <EditIcon />
-                      </Button>
-                    </EditScheduledWorkoutDialog>
-                  </TooltipTrigger>
-                  <TooltipContent>Update Scheduled Workout</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <ScheduledWorkoutListItemActionDropdown
+                scheduledWorkout={scheduledWorkout}
+              >
+                <Button variant="ghost" size="icon">
+                  <EllipsisIcon />
+                </Button>
+              </ScheduledWorkoutListItemActionDropdown>
             </div>
             <CardDescription
               style={{
@@ -189,28 +181,21 @@ const ScheduledWorkoutListItem = ({ scheduledWorkout, viewVariant }: Props) => {
           <TableCell>
             <DifficultyRating value={scheduledWorkout.workout.difficulty} />
           </TableCell>
+          <TableCell>
+            <Badge
+              variant={scheduledWorkout.completed ? "tertiary" : "secondary"}
+            >
+              {scheduledWorkout.completed ? "Completed" : "Planned"}
+            </Badge>
+          </TableCell>
           <TableCell className="flex items-center justify-end gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <EditScheduledWorkoutDialog
-                    model={{
-                      id: scheduledWorkout.id,
-                      scheduledAt: scheduledWorkout.scheduledAt,
-                      workoutId: scheduledWorkout.workout.id,
-                      colorKey:
-                        (scheduledWorkout.calendarEvent
-                          .colorKey as EventColorKey) ?? undefined,
-                    }}
-                  >
-                    <Button size="icon" variant={"ghost"}>
-                      <EditIcon />
-                    </Button>
-                  </EditScheduledWorkoutDialog>
-                </TooltipTrigger>
-                <TooltipContent>Edit Scheduled Workout</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <ScheduledWorkoutListItemActionDropdown
+              scheduledWorkout={scheduledWorkout}
+            >
+              <Button variant="ghost" size="icon">
+                <EllipsisIcon />
+              </Button>
+            </ScheduledWorkoutListItemActionDropdown>
           </TableCell>
         </TableRow>
       )}

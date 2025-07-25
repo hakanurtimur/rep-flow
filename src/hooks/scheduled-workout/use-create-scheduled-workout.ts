@@ -9,6 +9,7 @@ export const useCreateScheduledWorkout = ({ onSuccess = () => {} }) => {
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["scheduled-workouts"] }),
+        queryClient.invalidateQueries({ queryKey: ["calendar-events"] }),
       ]);
       onSuccess();
     },

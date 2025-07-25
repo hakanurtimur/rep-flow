@@ -117,6 +117,17 @@ class ApiService {
     return response.data;
   }
 
+  // ✅ PATCH
+  public async patch<T, R = AxiosResponse<T>>(
+    path: string,
+    data: T,
+    config?: AxiosRequestConfig,
+  ): Promise<R> {
+    const url = `/api/${path}`;
+    const response = await this.api.patch<R>(url, data, config);
+    return response.data;
+  }
+
   // ✅ DELETE
   public async delete<T, R = AxiosResponse<T>>(path: string): Promise<R> {
     const url = `/api/${path}`;

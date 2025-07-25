@@ -10,15 +10,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
-import {
-  CheckIcon,
-  ClockIcon,
-  MousePointer2Icon,
-  PlayIcon,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ClockIcon, MousePointer2Icon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import UpdateScheduledWorkoutStatusButton from "@/components/app/dashboard/dashboard-calendar/dashboard-calendar-body/update-calendar-event-status-button/update-scheduled-workout-status-button";
+import StartCalendarEventButton from "@/components/app/dashboard/dashboard-calendar/dashboard-calendar-body/start-calendar-event-button/start-calendar-event-button";
 
 interface Props {
   calendarEvent: CalendarEventListElement;
@@ -56,12 +52,19 @@ const WeeklyViewCard = ({ calendarEvent, variant }: Props) => {
         />
       </div>
       <div
-        className={cn("text-xs px-3 py-1.5 rounded-sm flex flex-col gap-2")}
+        className={cn(
+          "text-xs px-3 py-1.5 rounded-sm flex flex-col gap-2 relative",
+        )}
         style={{
           color: `var(${fg}`,
           backgroundColor: `var(${bg}`,
         }}
       >
+        {variant === "workout" && calendarEvent.scheduledWorkout!.completed && (
+          <Badge className="absolute top-1.5 right-3" variant="tertiary">
+            Completed
+          </Badge>
+        )}
         <div>
           {displayDate}-{displayTime}
         </div>
@@ -93,38 +96,19 @@ const WeeklyViewCard = ({ calendarEvent, variant }: Props) => {
                 Go To {variant} Details
               </TooltipContent>
             </Tooltip>
-            <div className="flex gap-2 items-center">
-              {variant === "workout" && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button size="icon" variant={"ghost"}>
-                      <PlayIcon
-                        style={{
-                          color: `var(${fg})`,
-                          fill: `var(${fg})`,
-                        }}
-                      />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Start Workout</TooltipContent>
-                </Tooltip>
-              )}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button size="icon" variant={"ghost"}>
-                    <CheckIcon
-                      style={{
-                        color: `var(${fg})`,
-                      }}
-                    />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className="capitalize">
-                  Mark as completed {variant}
-                </TooltipContent>
-              </Tooltip>
-            </div>
           </TooltipProvider>
+          <div className="flex gap-2 items-center">
+            {variant === "workout" && (
+              <StartCalendarEventButton foregroundColor={fg} />
+            )}
+            {variant === "workout" && (
+              <UpdateScheduledWorkoutStatusButton
+                completed={calendarEvent.scheduledWorkout!.completed}
+                workoutId={calendarEvent.scheduledWorkout!.id}
+                foregroundColor={fg}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

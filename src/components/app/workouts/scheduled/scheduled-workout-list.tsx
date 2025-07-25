@@ -38,6 +38,7 @@ const ScheduledWorkoutList = ({ scheduledWorkouts, viewVariant }: Props) => {
                 <TableHead></TableHead>
                 <TableHead>Exercises</TableHead>
                 <TableHead>Difficulty</TableHead>
+                <TableHead>Status</TableHead>
                 <TableHead>
                   <div className="flex items-center justify-end">Actions</div>
                 </TableHead>

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import {
   CreateScheduledWorkoutInput,
   UpdateScheduledWorkoutInput,
+  UpdateScheduledWorkoutStatusInput,
 } from "@/zod-schemas/scheduled-workout-schemas";
 import { AppError } from "@/lib/app-error";
 
@@ -29,9 +30,12 @@ export async function getScheduledWorkouts(userId: string) {
         },
       },
     },
-    orderBy: {
-      scheduledAt: "asc",
-    },
+    orderBy: [
+      { completed: "asc" },
+      {
+        scheduledAt: "asc",
+      },
+    ],
   });
 }
 
@@ -132,5 +136,32 @@ export async function deleteScheduledWorkout(id: string) {
     }
 
     return { success: true };
+  });
+}
+
+// PATCH completion status
+export async function updateScheduledWorkoutStatus(
+  userId: string,
+  id: string,
+  input: UpdateScheduledWorkoutStatusInput,
+) {
+  const scheduledWorkout = await prisma.scheduledWorkout.findFirst({
+    where: {
+      id,
+      userId,
+    },
+  });
+
+  if (!scheduledWorkout) {
+    const error: any = new Error("Scheduled workout not found");
+    error.code = "NOT_FOUND";
+    throw error;
+  }
+
+  return prisma.scheduledWorkout.update({
+    where: { id },
+    data: {
+      completed: input.completed,
+    },
   });
 }

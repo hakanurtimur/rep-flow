@@ -56,3 +56,10 @@ export const UpdateScheduledWorkoutSchema = CreateScheduledWorkoutSchema.extend(
 export type UpdateScheduledWorkoutInput = z.infer<
   typeof UpdateScheduledWorkoutSchema
 >;
+
+export const UpdateScheduledWorkoutStatusSchema = z.object({
+  completed: z.boolean(),
+});
+export type UpdateScheduledWorkoutStatusInput = z.infer<
+  typeof UpdateScheduledWorkoutStatusSchema
+>;

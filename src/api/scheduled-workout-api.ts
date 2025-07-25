@@ -2,6 +2,7 @@ import {
   CreateScheduledWorkoutInput,
   ScheduledWorkoutListElement,
   UpdateScheduledWorkoutInput,
+  UpdateScheduledWorkoutStatusInput,
 } from "@/zod-schemas/scheduled-workout-schemas";
 import api from "@/lib/axios-client";
 
@@ -37,4 +38,13 @@ export const updateScheduledWorkout = async (
 // DELETE
 export const deleteScheduledWorkout = async (id: string) => {
   return api.delete(`scheduled-workout/${id}`);
+};
+
+// PATCH as completed
+
+export const updateScheduledWorkoutStatus = async (
+  id: string,
+  input: UpdateScheduledWorkoutStatusInput,
+) => {
+  return await api.patch(`scheduled-workout/${id}`, input);
 };

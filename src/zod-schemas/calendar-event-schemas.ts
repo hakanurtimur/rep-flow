@@ -30,6 +30,7 @@ export const CalendarEventSchema = z.object({
     .object({
       id: z.string(),
       scheduledAt: z.coerce.date(),
+      completed: z.boolean(),
     })
     .nullable(),
 });

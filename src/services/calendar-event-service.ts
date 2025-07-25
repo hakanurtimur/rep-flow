@@ -24,6 +24,7 @@ export async function getCalendarEvents(userId: string) {
         select: {
           id: true,
           scheduledAt: true,
+          completed: true,
         },
       },
     },
