@@ -15,7 +15,15 @@ import { AnimatePresence, motion } from "motion/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { monthNames } from "@/components/app/dashboard/dashboard-calendar/dashboard-calendar-body/dashboard-calendar-body";
 import { CalendarPopover } from "@/components/ui/calendar-popover";
-import AddLogModal from "@/components/app/dashboard/add-log-modal/add-log-modal";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 const calendarOptions = [
   { mode: "yearly", label: "Yearly", icon: CalendarIcon },
@@ -167,9 +175,23 @@ const DashboardCalendarHeader = ({
               </ExpandableButton>
             ))}
           </div>
-          <AddLogModal>
-            <Button variant="dark">Add Log</Button>
-          </AddLogModal>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="dark">Add Calendar Event</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Add Calendar Event</DropdownMenuLabel>
+              <DropdownMenuGroup>
+                <DropdownMenuItem asChild>
+                  <Link href={"/workouts/scheduled?action=schedule-workout"}>
+                    Schedule A Workout
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>Add Nutrition</DropdownMenuItem>
+                <DropdownMenuItem>Add Health Metrics</DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </TooltipProvider>

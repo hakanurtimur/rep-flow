@@ -1,6 +1,8 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import ExpandableButton from "@/components/ui/expandable-button";
-import React from "react";
+import React, { useState } from "react";
 import { AlignJustifyIcon, LayoutGridIcon } from "lucide-react";
 import { PageBodyInnerHeader } from "@/components/layout-related/page-body-inner-header";
 import CreateScheduledWorkoutDialog from "@/components/app/workouts/scheduled/create-scheduled-workout-dialog/create-scheduled-workout-dialog";
@@ -8,6 +10,7 @@ import CreateScheduledWorkoutDialog from "@/components/app/workouts/scheduled/cr
 interface Props {
   onViewVariantChange: (variant: "card" | "list") => void;
   viewVariant: "card" | "list";
+  actionParam: string | null;
 }
 
 const viewVariants = [
@@ -17,7 +20,9 @@ const viewVariants = [
 const ScheduledWorkoutsHeader = ({
   onViewVariantChange,
   viewVariant,
+  actionParam,
 }: Props) => {
+  const [open, setOpen] = useState(actionParam === "schedule-workout");
   return (
     <PageBodyInnerHeader title="Scheduled Workouts">
       <div className="flex shadow-xs border rounded-md items-center justify-end">
@@ -35,7 +40,7 @@ const ScheduledWorkoutsHeader = ({
           </ExpandableButton>
         ))}
       </div>
-      <CreateScheduledWorkoutDialog>
+      <CreateScheduledWorkoutDialog open={open} onOpenChange={setOpen}>
         <Button variant="dark" className="w-fit">
           Schedule a workout
         </Button>
