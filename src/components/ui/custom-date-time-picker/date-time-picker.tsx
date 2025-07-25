@@ -40,6 +40,8 @@ export function DateTimePicker({
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(
     date,
   );
+
+  console.log(date);
   const [step, setStep] = React.useState<"date" | "time">("date");
 
   const handleDateSelect = React.useCallback(
@@ -138,7 +140,7 @@ export function DateTimePicker({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent side={"right"} className="w-auto p-0" align="start">
         {/* Header with Steps */}
         <div className="flex items-center justify-between p-3 border-b bg-muted/30">
           <div className="flex items-center gap-2">

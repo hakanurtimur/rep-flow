@@ -28,20 +28,21 @@ import { useCreateScheduledWorkout } from "@/hooks/scheduled-workout/use-create-
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { FormDateTimePicker } from "@/components/ui/custom-date-time-picker/form-date-time-picker";
+import { ComboboxFormSingle } from "@/components/ui/combobox-form-single";
+import { useListWorkoutOptions } from "@/hooks/workout/use-list-workout-options";
 
 interface Props {
-  workoutId: string;
   closeDialog: () => void;
 }
 
-const ScheduleWorkoutDialogForm = ({ closeDialog, workoutId }: Props) => {
+const CreateScheduledWorkoutDialogForm = ({ closeDialog }: Props) => {
   const router = useRouter();
   const form = useForm<CreateScheduledWorkoutInput>({
     resolver: zodResolver(CreateScheduledWorkoutSchema),
-    defaultValues: {
-      workoutId: workoutId,
-    },
+    defaultValues: {},
   });
+
+  const workoutOptionsQuery = useListWorkoutOptions();
 
   const mutation = useCreateScheduledWorkout({
     onSuccess: () => {
@@ -60,6 +61,15 @@ const ScheduleWorkoutDialogForm = ({ closeDialog, workoutId }: Props) => {
           })}
           className="space-y-4"
         >
+          <ComboboxFormSingle
+            form={form}
+            name={`workoutId`}
+            label="Workout"
+            options={workoutOptionsQuery.data}
+            valueField="id"
+            labelField="name"
+          />
+
           <FormDateTimePicker
             label={"Select Date"}
             control={form.control}
@@ -112,4 +122,4 @@ const ScheduleWorkoutDialogForm = ({ closeDialog, workoutId }: Props) => {
   );
 };
 
-export default ScheduleWorkoutDialogForm;
+export default CreateScheduledWorkoutDialogForm;

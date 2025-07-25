@@ -13,6 +13,7 @@ export const useUpdateWorkout = ({ onSuccess = () => {} }) => {
         }),
         queryClient.invalidateQueries({ queryKey: ["workout"] }),
         queryClient.invalidateQueries({ queryKey: ["workouts"] }),
+        queryClient.invalidateQueries({ queryKey: ["workout-options"] }),
       ]);
       onSuccess();
     },

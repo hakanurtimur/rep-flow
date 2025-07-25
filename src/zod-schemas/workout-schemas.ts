@@ -124,3 +124,10 @@ export const UpdateWorkoutSchema = CreateWorkoutSchema.extend({
 });
 
 export type UpdateWorkoutInput = z.infer<typeof UpdateWorkoutSchema>;
+
+export const WorkoutOptionSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+export type WorkoutOptionsItem = z.infer<typeof WorkoutOptionSchema>;

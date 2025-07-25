@@ -3,6 +3,7 @@ import {
   ExtendedWorkout,
   UpdateWorkoutInput,
   WorkoutListElement,
+  WorkoutOptionsItem,
 } from "@/zod-schemas/workout-schemas";
 import api from "@/lib/axios-client";
 
@@ -41,4 +42,10 @@ export const updateWorkout = async (
 // DELETE
 export const deleteWorkout = async (id: string) => {
   return api.delete(`workout/${id}`);
+};
+
+// GET as options
+export const getWorkoutOptions = async (): Promise<WorkoutOptionsItem[]> => {
+  const res = await api.get<WorkoutOptionsItem[]>("workout/workout-options");
+  return res.data;
 };

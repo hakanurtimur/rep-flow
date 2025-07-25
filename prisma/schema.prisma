@@ -166,6 +166,9 @@ model ScheduledWorkout {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  calendarEvent   CalendarEvent? @relation("ScheduledWorkoutCalendarEvent", fields: [calendarEventId], references: [id], onDelete: Cascade)
+  calendarEventId String?        @unique
+
   workout Workout @relation(fields: [workoutId], references: [id])
   user    User    @relation(fields: [userId], references: [id])
 
@@ -182,10 +185,11 @@ model NutritionLog {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  calendarEvent   CalendarEvent? @relation("NutritionLogCalendarEvent", fields: [calendarEventId], references: [id], onDelete: Cascade)
+  calendarEventId String?        @unique
+
   user  User   @relation(fields: [userId], references: [id])
   meals Meal[]
-
-  calendarEvent CalendarEvent?
 
   @@index([userId])
   @@map("nutrition_logs")
@@ -295,9 +299,10 @@ model CalendarEvent {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      User          @relation(fields: [userId], references: [id])
-  workout   Workout?      @relation(fields: [workoutId], references: [id])
-  nutrition NutritionLog? @relation(fields: [nutritionId], references: [id])
+  user             User              @relation(fields: [userId], references: [id])
+  workout          Workout?          @relation(fields: [workoutId], references: [id])
+  nutrition        NutritionLog?     @relation("NutritionLogCalendarEvent")
+  scheduledWorkout ScheduledWorkout? @relation("ScheduledWorkoutCalendarEvent")
 
   @@index([userId])
   @@index([workoutId])

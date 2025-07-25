@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { CreateScheduledWorkoutInput } from "@/zod-schemas/scheduled-workout-schemas";
+import {
+  CreateScheduledWorkoutInput,
+  UpdateScheduledWorkoutInput,
+} from "@/zod-schemas/scheduled-workout-schemas";
+import { AppError } from "@/lib/app-error";
 
 // GET
 export async function getScheduledWorkouts(userId: string) {
@@ -17,6 +21,13 @@ export async function getScheduledWorkouts(userId: string) {
           difficulty: true,
         },
       },
+      calendarEvent: {
+        select: {
+          id: true,
+          date: true,
+          colorKey: true,
+        },
+      },
     },
     orderBy: {
       scheduledAt: "asc",
@@ -30,15 +41,7 @@ export async function createScheduledWorkout(
   input: CreateScheduledWorkoutInput,
 ) {
   return prisma.$transaction(async (tx) => {
-    const scheduledWorkout = await tx.scheduledWorkout.create({
-      data: {
-        workoutId: input.workoutId,
-        userId,
-        scheduledAt: input.scheduledAt,
-      },
-    });
-
-    await tx.calendarEvent.create({
+    const calendarEvent = await tx.calendarEvent.create({
       data: {
         userId,
         date: input.scheduledAt,
@@ -48,6 +51,86 @@ export async function createScheduledWorkout(
       },
     });
 
-    return scheduledWorkout;
+    return tx.scheduledWorkout.create({
+      data: {
+        workoutId: input.workoutId,
+        userId,
+        scheduledAt: input.scheduledAt,
+        calendarEventId: calendarEvent.id,
+      },
+    });
+  });
+}
+
+// PUT
+export async function updateScheduledWorkout(
+  userId: string,
+  id: string,
+  input: UpdateScheduledWorkoutInput,
+) {
+  return prisma.$transaction(async (tx) => {
+    const existing = await tx.scheduledWorkout.findFirst({
+      where: {
+        id,
+        userId,
+      },
+      select: {
+        calendarEventId: true,
+      },
+    });
+
+    if (!existing || !existing.calendarEventId) {
+      throw new Error("Scheduled workout not found or missing calendar event");
+    }
+
+    await tx.calendarEvent.update({
+      where: {
+        id: existing.calendarEventId,
+      },
+      data: {
+        date: input.scheduledAt,
+        colorKey: input.colorKey ?? null,
+      },
+    });
+
+    return tx.scheduledWorkout.update({
+      where: {
+        id,
+      },
+      data: {
+        scheduledAt: input.scheduledAt,
+        workoutId: input.workoutId,
+      },
+    });
+  });
+}
+
+// DELETE
+export async function deleteScheduledWorkout(id: string) {
+  return prisma.$transaction(async (tx) => {
+    const scheduledWorkout = await tx.scheduledWorkout.findUnique({
+      where: { id },
+      include: {
+        calendarEvent: true,
+      },
+    });
+
+    if (!scheduledWorkout) {
+      throw new AppError("Scheduled workout not found.", "NOT_FOUND");
+    }
+
+    await tx.scheduledWorkout.delete({
+      where: { id },
+    });
+
+    if (scheduledWorkout.calendarEventId) {
+      await tx.calendarEvent.delete({
+        where: {
+          id: scheduledWorkout.calendarEventId,
+        },
+      });
+    }
+
+    return { success: true };
   });
 }

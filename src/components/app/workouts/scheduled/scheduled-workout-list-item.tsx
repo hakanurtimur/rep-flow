@@ -20,10 +20,15 @@ import {
 import { TableCell, TableRow } from "@/components/ui/table";
 import DifficultyRating from "@/components/ui/difficulty-rating";
 import { Separator } from "@/components/ui/separator";
-import { ScheduledWorkoutListElement } from "@/zod-schemas/scheduled-workout-schemas";
+import {
+  EventColorKey,
+  ScheduledWorkoutListElement,
+} from "@/zod-schemas/scheduled-workout-schemas";
 import { format } from "date-fns";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import EditScheduledWorkoutDialog from "@/components/app/workouts/scheduled/edit-scheduled-workout-dialog/edit-scheduled-workout-dialog";
+import { eventColorMap } from "@/lib/event-color-map";
 
 interface Props {
   scheduledWorkout: ScheduledWorkoutListElement;
@@ -31,12 +36,25 @@ interface Props {
 }
 
 const ScheduledWorkoutListItem = ({ scheduledWorkout, viewVariant }: Props) => {
-  const displayDate = format(scheduledWorkout.scheduledAt, "MMMM do, yyyy"); // July 8th, 2025
+  const displayDate = format(scheduledWorkout.scheduledAt, "MMMM do, yyyy");
   const displayTime = format(scheduledWorkout.scheduledAt, "HH:mm");
+
+  const rawKey = scheduledWorkout.calendarEvent.colorKey;
+  const key = (
+    rawKey && rawKey in eventColorMap ? rawKey : "muted"
+  ) as keyof typeof eventColorMap;
+
+  const { bg, fg } = eventColorMap[key];
+
   return (
     <>
       {viewVariant === "card" ? (
-        <Card>
+        <Card
+          style={{
+            backgroundColor: `var(${bg})`,
+            color: `var(${fg})`,
+          }}
+        >
           <CardHeader>
             <div className="flex items-center justify-between">
               <TooltipProvider>
@@ -46,15 +64,46 @@ const ScheduledWorkoutListItem = ({ scheduledWorkout, viewVariant }: Props) => {
                       href={`/workouts/list/${scheduledWorkout.workout.id}?from=/workouts/scheduled`}
                       className="flex gap-2 items-center font-semibold hover:underline"
                     >
-                      <MousePointer2Icon className="w-3 h-3 fill-primary text-primary" />
-                      {scheduledWorkout.workout.name}
+                      <MousePointer2Icon
+                        className="w-3 h-3"
+                        style={{
+                          color: `var(${fg})`,
+                          fill: `var(${fg})`,
+                        }}
+                      />
+                      {scheduledWorkout.workout.name}{" "}
                     </Link>
                   </TooltipTrigger>
                   <TooltipContent>Go To Workout Details</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <EditScheduledWorkoutDialog
+                      model={{
+                        id: scheduledWorkout.id,
+                        scheduledAt: scheduledWorkout.scheduledAt,
+                        workoutId: scheduledWorkout.workout.id,
+                        colorKey:
+                          (scheduledWorkout.calendarEvent
+                            .colorKey as EventColorKey) ?? undefined,
+                      }}
+                    >
+                      <Button size="icon" variant={"ghost"}>
+                        <EditIcon />
+                      </Button>
+                    </EditScheduledWorkoutDialog>
+                  </TooltipTrigger>
+                  <TooltipContent>Update Scheduled Workout</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
-            <CardDescription>
+            <CardDescription
+              style={{
+                color: `var(${fg})`,
+              }}
+            >
               {scheduledWorkout.workout.description}
             </CardDescription>
           </CardHeader>
@@ -82,7 +131,10 @@ const ScheduledWorkoutListItem = ({ scheduledWorkout, viewVariant }: Props) => {
                 orientation={"vertical"}
                 className={"h-full min-h-full"}
               />
-              <DifficultyRating value={scheduledWorkout.workout.difficulty} />
+              <DifficultyRating
+                flameColor={`var(${fg})`}
+                value={scheduledWorkout.workout.difficulty}
+              />
             </div>
           </CardContent>
         </Card>
@@ -141,11 +193,22 @@ const ScheduledWorkoutListItem = ({ scheduledWorkout, viewVariant }: Props) => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button size="icon" variant={"ghost"}>
-                    <EditIcon />
-                  </Button>
+                  <EditScheduledWorkoutDialog
+                    model={{
+                      id: scheduledWorkout.id,
+                      scheduledAt: scheduledWorkout.scheduledAt,
+                      workoutId: scheduledWorkout.workout.id,
+                      colorKey:
+                        (scheduledWorkout.calendarEvent
+                          .colorKey as EventColorKey) ?? undefined,
+                    }}
+                  >
+                    <Button size="icon" variant={"ghost"}>
+                      <EditIcon />
+                    </Button>
+                  </EditScheduledWorkoutDialog>
                 </TooltipTrigger>
-                <TooltipContent>Update Scheduled Workout</TooltipContent>
+                <TooltipContent>Edit Scheduled Workout</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </TableCell>

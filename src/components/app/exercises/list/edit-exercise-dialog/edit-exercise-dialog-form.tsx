@@ -56,14 +56,14 @@ const EditExerciseDialogForm = ({ model, onClose }: Props) => {
   const muscleGroupOptionsQuery = useListMuscleGroupOptions();
   const mutation = useUpdateExercise({
     onSuccess: () => {
-      toast("Exercise updated succesfuly.");
+      toast("Exercise updated succesfully.");
       onClose();
     },
   });
 
   const deleteMutation = useDeleteExercise({
     onSuccess: () => {
-      toast("Exercise deleted succesfuly.");
+      toast("Exercise deleted successfully.");
       onClose();
     },
   });

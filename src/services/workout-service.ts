@@ -274,3 +274,17 @@ export const deleteWorkout = async (id: string, userId: string) => {
     },
   });
 };
+
+// GET as options
+export async function getWorkoutOptions(userId: string) {
+  return prisma.workout.findMany({
+    where: { userId },
+    select: {
+      id: true,
+      name: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}

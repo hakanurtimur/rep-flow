@@ -46,7 +46,7 @@ export function FormDateTimePicker<
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <DateTimePicker
-              date={field.value}
+              date={field.value ? new Date(field.value) : undefined}
               onDateChange={(date) => {
                 field.onChange(date);
               }}

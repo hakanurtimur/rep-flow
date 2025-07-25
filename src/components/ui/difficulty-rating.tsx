@@ -5,11 +5,17 @@ type Props = {
   value: number; // 0-10 arası değer
   maxFlames?: number; // default: 5 alev gösterilir
   className?: string;
+  flameColor?: string;
 };
 
-const DifficultyRating = ({ value, maxFlames = 5, className }: Props) => {
-  const normalized = Math.min(Math.max(value, 0), 10); // clamp 0–10
-  const rating = (normalized / 10) * maxFlames; // 🔥 sayısına çevir
+const DifficultyRating = ({
+  value,
+  maxFlames = 5,
+  className,
+  flameColor,
+}: Props) => {
+  const normalized = Math.min(Math.max(value, 0), 10);
+  const rating = (normalized / 10) * maxFlames;
 
   const fullCount = Math.floor(rating);
   const hasHalf = rating - fullCount >= 0.5;
@@ -21,11 +27,22 @@ const DifficultyRating = ({ value, maxFlames = 5, className }: Props) => {
         <FlameIcon
           key={`full-${i}`}
           className="w-4 h-4 text-destructive fill-destructive"
+          style={{
+            color: flameColor,
+            fill: flameColor,
+          }}
         />
       ))}
 
       {hasHalf && (
-        <FlameIcon className="w-4 h-4 text-destructive fill-destructive  opacity-50" />
+        <FlameIcon
+          className="w-4 h-4 text-destructive fill-destructive  opacity-50"
+          style={{
+            color: flameColor,
+            opacity: "50%",
+            fill: flameColor,
+          }}
+        />
       )}
 
       {Array.from({ length: emptyCount }).map((_, i) => (

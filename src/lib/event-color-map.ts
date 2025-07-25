@@ -27,26 +27,26 @@ export const eventColorMap = {
   chart1: {
     label: "Chart 1",
     bg: "--color-chart-1",
-    fg: "--color-foreground", // fallback foreground
+    fg: "--color-chart-1-foreground",
   },
   chart2: {
     label: "Chart 2",
     bg: "--color-chart-2",
-    fg: "--color-foreground",
+    fg: "--color-chart-2-foreground",
   },
   chart3: {
     label: "Chart 3",
     bg: "--color-chart-3",
-    fg: "--color-foreground",
+    fg: "--color-chart-3-foreground",
   },
   chart4: {
     label: "Chart 4",
     bg: "--color-chart-4",
-    fg: "--color-foreground",
+    fg: "--color-chart-4-foreground",
   },
   chart5: {
     label: "Chart 5",
     bg: "--color-chart-5",
-    fg: "--color-foreground",
+    fg: "--color-chart-5-foreground",
   },
 } as const;

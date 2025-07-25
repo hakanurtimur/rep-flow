@@ -13,8 +13,8 @@ import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
-  CreateScheduledWorkoutInput,
-  CreateScheduledWorkoutSchema,
+  UpdateScheduledWorkoutInput,
+  UpdateScheduledWorkoutSchema,
 } from "@/zod-schemas/scheduled-workout-schemas";
 import {
   Select,
@@ -24,30 +24,38 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { eventColorMap } from "@/lib/event-color-map";
-import { useCreateScheduledWorkout } from "@/hooks/scheduled-workout/use-create-scheduled-workout";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { FormDateTimePicker } from "@/components/ui/custom-date-time-picker/form-date-time-picker";
+import { useUpdateScheduledWorkout } from "@/hooks/scheduled-workout/use-update-scheduled-workout";
+import DeleteAlertDialog from "@/components/delete-alert-dialog";
+import { useState } from "react";
+import { useDeleteScheduledWorkout } from "@/hooks/scheduled-workout/use-delete-scheduled-workout";
 
 interface Props {
-  workoutId: string;
+  model: UpdateScheduledWorkoutInput;
   closeDialog: () => void;
 }
 
-const ScheduleWorkoutDialogForm = ({ closeDialog, workoutId }: Props) => {
-  const router = useRouter();
-  const form = useForm<CreateScheduledWorkoutInput>({
-    resolver: zodResolver(CreateScheduledWorkoutSchema),
+const EditScheduledWorkoutDialogForm = ({ closeDialog, model }: Props) => {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const form = useForm<UpdateScheduledWorkoutInput>({
+    resolver: zodResolver(UpdateScheduledWorkoutSchema),
     defaultValues: {
-      workoutId: workoutId,
+      ...model,
     },
   });
 
-  const mutation = useCreateScheduledWorkout({
+  const mutation = useUpdateScheduledWorkout({
     onSuccess: () => {
       toast("Workout scheduled successfully!");
       closeDialog();
-      router.push("/workouts/scheduled");
+    },
+  });
+
+  const deleteMutation = useDeleteScheduledWorkout({
+    onSuccess: () => {
+      toast("Exercise deleted successfully.");
+      closeDialog();
     },
   });
 
@@ -98,13 +106,49 @@ const ScheduleWorkoutDialogForm = ({ closeDialog, workoutId }: Props) => {
             className={cn("flex flex-row! items-center gap-2 w-full")}
           >
             <DialogClose type="button" asChild>
-              <Button variant="outline" disabled={mutation.isPending}>
+              <Button
+                variant="outline"
+                disabled={mutation.isPending || deleteMutation.isPending}
+              >
                 Cancel
               </Button>
             </DialogClose>
-            <Button loading={mutation.isPending} type="submit">
+            <Button
+              disabled={deleteMutation.isPending}
+              loading={mutation.isPending}
+              type="submit"
+            >
               Save
             </Button>
+            <DeleteAlertDialog
+              title="Delete Scheduled Workout"
+              description="Are you sure you want to delete this scheduled workout? This action cannot be undone."
+              onDelete={() => {
+                if (model) {
+                  deleteMutation.mutate(model.id);
+                }
+              }}
+              isOpen={isDeleteDialogOpen}
+              onOpenChange={(open) => {
+                setIsDeleteDialogOpen(open);
+                if (!open) {
+                  setTimeout(() => {
+                    deleteMutation.reset();
+                  }, 200);
+                }
+              }}
+              disabled={mutation.isPending || deleteMutation.isPending}
+              loading={deleteMutation.isPending}
+              customError={deleteMutation.error?.message}
+            >
+              <Button
+                disabled={mutation.isPending || deleteMutation.isPending}
+                variant={"destructive"}
+                type="button"
+              >
+                Delete
+              </Button>
+            </DeleteAlertDialog>
           </DialogFooter>
         </form>
       </Form>
@@ -112,4 +156,4 @@ const ScheduleWorkoutDialogForm = ({ closeDialog, workoutId }: Props) => {
   );
 };
 
-export default ScheduleWorkoutDialogForm;
+export default EditScheduledWorkoutDialogForm;

@@ -13,6 +13,8 @@ export const eventColorKeyEnum = z.enum([
   "chart5",
 ]);
 
+export type EventColorKey = z.infer<typeof eventColorKeyEnum>;
+
 export const CreateScheduledWorkoutSchema = z.object({
   workoutId: z.string().min(1, "Workout ID is required"),
   scheduledAt: z.union([z.string().datetime(), z.date()]),
@@ -34,8 +36,23 @@ export const ScheduledWorkoutListElementSchema = z.object({
     duration: z.number(),
     difficulty: z.number(),
   }),
+  calendarEvent: z.object({
+    id: z.string(),
+    date: z.coerce.date(),
+    colorKey: z.string().nullable(),
+  }),
 });
 
 export type ScheduledWorkoutListElement = z.infer<
   typeof ScheduledWorkoutListElementSchema
+>;
+
+export const UpdateScheduledWorkoutSchema = CreateScheduledWorkoutSchema.extend(
+  {
+    id: z.string(),
+  },
+);
+
+export type UpdateScheduledWorkoutInput = z.infer<
+  typeof UpdateScheduledWorkoutSchema
 >;

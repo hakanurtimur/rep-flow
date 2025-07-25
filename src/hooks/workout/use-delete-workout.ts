@@ -10,6 +10,7 @@ export const useDeleteWorkout = ({ onSuccess = () => {} }) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["workout"] }),
         queryClient.invalidateQueries({ queryKey: ["workouts"] }),
+        queryClient.invalidateQueries({ queryKey: ["workout-options"] }),
       ]);
       onSuccess();
     },

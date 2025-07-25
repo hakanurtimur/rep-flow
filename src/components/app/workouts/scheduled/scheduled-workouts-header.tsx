@@ -3,7 +3,7 @@ import ExpandableButton from "@/components/ui/expandable-button";
 import React from "react";
 import { AlignJustifyIcon, LayoutGridIcon } from "lucide-react";
 import { PageBodyInnerHeader } from "@/components/layout-related/page-body-inner-header";
-import Link from "next/link";
+import CreateScheduledWorkoutDialog from "@/components/app/workouts/scheduled/create-scheduled-workout-dialog/create-scheduled-workout-dialog";
 
 interface Props {
   onViewVariantChange: (variant: "card" | "list") => void;
@@ -35,11 +35,11 @@ const ScheduledWorkoutsHeader = ({
           </ExpandableButton>
         ))}
       </div>
-      <Link href={"/workouts/list"}>
+      <CreateScheduledWorkoutDialog>
         <Button variant="dark" className="w-fit">
           Schedule a workout
         </Button>
-      </Link>
+      </CreateScheduledWorkoutDialog>
     </PageBodyInnerHeader>
   );
 };
