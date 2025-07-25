@@ -13,7 +13,7 @@ import {
 import ExpandableButton from "@/components/ui/expandable-button";
 import { AnimatePresence, motion } from "motion/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { monthNames } from "@/components/app/dashboard/dashboard-calendar/dashboard-calendar-body";
+import { monthNames } from "@/components/app/dashboard/dashboard-calendar/dashboard-calendar-body/dashboard-calendar-body";
 import { CalendarPopover } from "@/components/ui/calendar-popover";
 import AddLogModal from "@/components/app/dashboard/add-log-modal/add-log-modal";
 

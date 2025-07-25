@@ -75,7 +75,11 @@ const WorkoutDetailsHeader = ({
       <Link href={fromParam ?? "/workouts/list"}>
         <Button>
           <ArrowLeftIcon />{" "}
-          {fromParam ? "Scheduled Workouts" : "Back To Workouts"}
+          {!fromParam
+            ? "Back To Workouts"
+            : fromParam.includes("dashboard")
+              ? "Calendar"
+              : "Scheduled Workouts"}
         </Button>
       </Link>
     </PageBodyInnerHeader>
