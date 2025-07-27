@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useUpdateScheduledWorkoutStatus } from "@/hooks/scheduled-workout/use-update-scheduled-workout-status";
 import { toast } from "sonner";
+import StartWorkoutSessionButton from "@/components/app/shared/start-workout-session-button";
 
 interface Props {
   children: ReactNode;
@@ -58,6 +59,13 @@ const ScheduledWorkoutListItemActionDropdown = ({
             >
               Mark as {!scheduledWorkout.completed ? "Complete" : "Todo"}
             </Button>
+          </div>
+          <div>
+            <StartWorkoutSessionButton
+              className="w-full justify-start pl-2 font-normal cursor-default"
+              scheduledWorkoutId={scheduledWorkout.id}
+              variant={"default"}
+            />
           </div>
           <DropdownMenuItem asChild>
             <EditScheduledWorkoutDialog

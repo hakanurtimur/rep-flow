@@ -29,6 +29,19 @@ export async function getScheduledWorkouts(userId: string) {
           colorKey: true,
         },
       },
+      WorkoutSession: {
+        where: {
+          isActive: true,
+        },
+        select: {
+          id: true,
+          isPaused: true,
+          currentStep: true,
+          durationElapsed: true,
+          startedAt: true,
+        },
+        take: 1,
+      },
     },
     orderBy: [
       { completed: "asc" },

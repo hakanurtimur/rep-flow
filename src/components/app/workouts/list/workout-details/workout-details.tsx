@@ -15,7 +15,6 @@ const WorkoutDetails = () => {
   const fromParam = searchParams.get("from");
 
   const query = useGetWorkout(workoutId as string);
-  console.log(query);
 
   if (query.isLoading || !query.data) {
     return <LoadingOverlay fullScreen={false} />;

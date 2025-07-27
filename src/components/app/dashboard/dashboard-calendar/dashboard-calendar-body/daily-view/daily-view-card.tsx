@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import UpdateScheduledWorkoutStatusButton from "@/components/app/dashboard/dashboard-calendar/dashboard-calendar-body/update-calendar-event-status-button/update-scheduled-workout-status-button";
-import StartCalendarEventButton from "@/components/app/dashboard/dashboard-calendar/dashboard-calendar-body/start-calendar-event-button/start-calendar-event-button";
+import StartWorkoutSessionButton from "@/components/app/shared/start-workout-session-button";
 
 interface Props {
   calendarEvent: CalendarEventListElement;
@@ -95,9 +95,14 @@ const DailyViewCard = ({ calendarEvent, variant }: Props) => {
               </Tooltip>
             </TooltipProvider>
             <div className="flex gap-2 items-center">
-              {variant === "workout" && (
-                <StartCalendarEventButton foregroundColor={fg} />
-              )}
+              {variant === "workout" &&
+                !calendarEvent.scheduledWorkout!.completed && (
+                  <StartWorkoutSessionButton
+                    scheduledWorkoutId={calendarEvent.scheduledWorkout!.id}
+                    variant={"icon"}
+                    fg={fg}
+                  />
+                )}
               {variant === "workout" && (
                 <UpdateScheduledWorkoutStatusButton
                   completed={calendarEvent.scheduledWorkout!.completed}

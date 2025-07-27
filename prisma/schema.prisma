@@ -24,6 +24,7 @@ model Workout {
   templates         WorkoutTemplateOnWorkout[]
   scheduledWorkouts ScheduledWorkout[]
   CalendarEvent     CalendarEvent[]
+  WorkoutSession    WorkoutSession[]
 
   @@unique([id, userId])
   @@index([userId])
@@ -153,6 +154,7 @@ model User {
   calendarEvents    CalendarEvent[]
   WorkoutTemplate   WorkoutTemplate[]
   MuscleGroup       MuscleGroup[]
+  WorkoutSession    WorkoutSession[]
 
   @@map("users")
 }
@@ -169,8 +171,9 @@ model ScheduledWorkout {
   calendarEvent   CalendarEvent? @relation("ScheduledWorkoutCalendarEvent", fields: [calendarEventId], references: [id], onDelete: Cascade)
   calendarEventId String?        @unique
 
-  workout Workout @relation(fields: [workoutId], references: [id])
-  user    User    @relation(fields: [userId], references: [id])
+  workout        Workout          @relation(fields: [workoutId], references: [id])
+  user           User             @relation(fields: [userId], references: [id])
+  WorkoutSession WorkoutSession[]
 
   @@index([workoutId])
   @@index([userId])
@@ -307,6 +310,28 @@ model CalendarEvent {
   @@index([userId])
   @@index([workoutId])
   @@map("calendar_events")
+}
+
+model WorkoutSession {
+  id                 String    @id @default(cuid())
+  userId             String
+  workoutId          String
+  scheduledWorkoutId String?
+  currentStep        Int       @default(0)
+  durationElapsed    Int       @default(0)
+  isPaused           Boolean   @default(false)
+  isActive           Boolean   @default(true)
+  startedAt          DateTime  @default(now())
+  endedAt            DateTime?
+
+  user             User              @relation(fields: [userId], references: [id])
+  workout          Workout           @relation(fields: [workoutId], references: [id])
+  scheduledWorkout ScheduledWorkout? @relation(fields: [scheduledWorkoutId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([workoutId])
+  @@index([scheduledWorkoutId])
+  @@map("workout_sessions")
 }
 
 enum EventType {
