@@ -24,7 +24,7 @@ const DailyView = ({ currentDate, events }: Props) => {
               events.map((event) => (
                 <DailyViewCard
                   key={event.id}
-                  variant={event.nutrition ? "nutrition" : "workout"}
+                  variant={event.meal ? "nutrition" : "workout"}
                   calendarEvent={event}
                 />
               ))

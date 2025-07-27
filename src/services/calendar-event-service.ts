@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 
-// GET
 export async function getCalendarEvents(userId: string) {
   return prisma.calendarEvent.findMany({
     where: {
@@ -14,17 +13,24 @@ export async function getCalendarEvents(userId: string) {
           description: true,
         },
       },
-      nutrition: {
-        select: {
-          id: true,
-          description: true,
-        },
-      },
       scheduledWorkout: {
         select: {
           id: true,
           scheduledAt: true,
           completed: true,
+        },
+      },
+      meal: {
+        select: {
+          id: true,
+          type: true,
+          time: true,
+          description: true,
+          nutritionPlan: {
+            select: {
+              date: true,
+            },
+          },
         },
       },
     },

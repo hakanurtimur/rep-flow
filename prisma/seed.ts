@@ -12,6 +12,7 @@ async function main() {
   await prisma.templateExercise.deleteMany();
   await prisma.workoutExercise.deleteMany();
   await prisma.calendarEvent.deleteMany();
+  await prisma.workoutSession.deleteMany();
   await prisma.scheduledWorkout.deleteMany();
   await prisma.workoutTemplate.deleteMany();
   await prisma.workout.deleteMany();

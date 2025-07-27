@@ -52,7 +52,7 @@ const WeeklyView = ({ currentDate, getEventsForDate, dayNames }: Props) => {
                 <div className="space-y-4">
                   {events.map((event) => (
                     <WeeklyViewCard
-                      variant={event.nutrition ? "nutrition" : "workout"}
+                      variant={event.meal ? "nutrition" : "workout"}
                       key={event.id}
                       calendarEvent={event}
                     />

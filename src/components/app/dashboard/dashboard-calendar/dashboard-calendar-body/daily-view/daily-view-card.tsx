@@ -118,7 +118,7 @@ const DailyViewCard = ({ calendarEvent, variant }: Props) => {
             }}
           >
             {variant === "nutrition"
-              ? calendarEvent.nutrition!.description
+              ? calendarEvent.meal!.description
               : calendarEvent.workout!.description}
           </CardDescription>
         </CardHeader>

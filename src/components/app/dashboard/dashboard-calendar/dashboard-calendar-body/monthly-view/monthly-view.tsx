@@ -45,7 +45,7 @@ const MonthlyView = ({
             <div className="space-y-1">
               {events.slice(0, 2).map((event) => (
                 <MonthlyViewCard
-                  variant={event.nutrition ? "nutrition" : "workout"}
+                  variant={event.meal ? "nutrition" : "workout"}
                   calendarEvent={event}
                   key={event.id}
                 />

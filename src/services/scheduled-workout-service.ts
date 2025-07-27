@@ -29,7 +29,7 @@ export async function getScheduledWorkouts(userId: string) {
           colorKey: true,
         },
       },
-      WorkoutSession: {
+      workoutSession: {
         where: {
           isActive: true,
         },

@@ -6,7 +6,7 @@ export const CalendarEventSchema = z.object({
   type: z.enum(["WORKOUT", "NUTRITION"]),
   date: z.coerce.date(),
   workoutId: z.string().nullable(),
-  nutritionId: z.string().nullable(),
+  mealId: z.string().nullable(),
   colorKey: z.string().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
@@ -19,10 +19,15 @@ export const CalendarEventSchema = z.object({
     })
     .nullable(),
 
-  nutrition: z
+  meal: z
     .object({
       id: z.string(),
+      type: z.enum(["BREAKFAST", "LUNCH", "DINNER", "SNACK"]),
+      time: z.coerce.date().nullable(),
       description: z.string().nullable(),
+      nutritionPlan: z.object({
+        date: z.coerce.date(),
+      }),
     })
     .nullable(),
 
