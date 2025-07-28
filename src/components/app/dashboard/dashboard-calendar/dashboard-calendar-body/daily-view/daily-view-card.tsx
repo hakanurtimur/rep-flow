@@ -36,6 +36,8 @@ const DailyViewCard = ({ calendarEvent, variant }: Props) => {
   ) as keyof typeof eventColorMap;
 
   const { bg, fg } = eventColorMap[key];
+
+  console.log(calendarEvent);
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row items-center">
@@ -72,8 +74,8 @@ const DailyViewCard = ({ calendarEvent, variant }: Props) => {
                   <Link
                     href={
                       variant === "nutrition"
-                        ? "/??"
-                        : `/workouts/list/${calendarEvent.workout!.id}?from=/dashboard`
+                        ? "/nutrition-plans/list"
+                        : `/workouts/list/${calendarEvent.workout?.id}?from=/dashboard`
                     }
                     className="flex gap-2 items-center font-semibold hover:underline"
                   >
@@ -85,8 +87,8 @@ const DailyViewCard = ({ calendarEvent, variant }: Props) => {
                       }}
                     />
                     {variant === "nutrition"
-                      ? "Nutrition"
-                      : calendarEvent.workout!.name}
+                      ? calendarEvent.meal?.type
+                      : calendarEvent.workout?.name}
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent className="capitalize">
@@ -96,17 +98,19 @@ const DailyViewCard = ({ calendarEvent, variant }: Props) => {
             </TooltipProvider>
             <div className="flex gap-2 items-center">
               {variant === "workout" &&
-                !calendarEvent.scheduledWorkout!.completed && (
+                !calendarEvent.scheduledWorkout?.completed && (
                   <StartWorkoutSessionButton
-                    scheduledWorkoutId={calendarEvent.scheduledWorkout!.id}
+                    scheduledWorkoutId={
+                      calendarEvent.scheduledWorkout?.id ?? ""
+                    }
                     variant={"icon"}
                     fg={fg}
                   />
                 )}
               {variant === "workout" && (
                 <UpdateScheduledWorkoutStatusButton
-                  completed={calendarEvent.scheduledWorkout!.completed}
-                  workoutId={calendarEvent.scheduledWorkout!.id}
+                  completed={calendarEvent.scheduledWorkout?.completed ?? false}
+                  workoutId={calendarEvent.scheduledWorkout?.id ?? ""}
                   foregroundColor={fg}
                 />
               )}
@@ -118,8 +122,8 @@ const DailyViewCard = ({ calendarEvent, variant }: Props) => {
             }}
           >
             {variant === "nutrition"
-              ? calendarEvent.meal!.description
-              : calendarEvent.workout!.description}
+              ? calendarEvent.meal?.description
+              : calendarEvent.workout?.description}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -138,7 +142,7 @@ const DailyViewCard = ({ calendarEvent, variant }: Props) => {
             </div>
           </div>
           {variant === "workout" &&
-            calendarEvent.scheduledWorkout!.completed && (
+            calendarEvent.scheduledWorkout?.completed && (
               <Badge className="absolute bottom-6 right-5" variant="tertiary">
                 Completed
               </Badge>

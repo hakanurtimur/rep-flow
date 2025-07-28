@@ -187,7 +187,11 @@ const DashboardCalendarHeader = ({
                     Schedule A Workout
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>Add Nutrition</DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={"/nutrition-plans/list?action=add-meal"}>
+                    Add A Meal
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Add Health Metrics</DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>

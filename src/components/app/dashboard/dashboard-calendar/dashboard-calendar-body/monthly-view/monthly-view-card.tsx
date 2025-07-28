@@ -38,8 +38,8 @@ const MonthlyViewCard = ({ calendarEvent, variant }: Props) => {
               <Link
                 href={
                   variant === "nutrition"
-                    ? "/??"
-                    : `/workouts/list/${calendarEvent.workout!.id}?from=/dashboard`
+                    ? "/nutrition-plans/list"
+                    : `/workouts/list/${calendarEvent.workout?.id}?from=/dashboard`
                 }
                 className="flex gap-2 items-center font-semibold hover:underline"
               >
@@ -52,7 +52,7 @@ const MonthlyViewCard = ({ calendarEvent, variant }: Props) => {
                 />
                 {variant === "nutrition"
                   ? "Nutrition"
-                  : calendarEvent.workout!.name}
+                  : calendarEvent.workout?.name}
               </Link>
             </TooltipTrigger>
             <TooltipContent className="capitalize">

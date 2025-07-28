@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import {
+  Apple,
   ArmchairIcon,
   BookOpen,
   Frame,
@@ -72,6 +73,17 @@ const data = {
         {
           title: "Workout Templates",
           url: "/workouts/templates",
+        },
+      ],
+    },
+    {
+      title: "Nutrition Plans",
+      url: "/nutrition-plans",
+      icon: Apple,
+      items: [
+        {
+          title: "Nutrition Plans",
+          url: "/nutrition-plans/list",
         },
       ],
     },

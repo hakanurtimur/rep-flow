@@ -323,7 +323,6 @@ model CalendarEvent {
   type      EventType
   date      DateTime
   workoutId String?
-  mealId    String?   @unique
   colorKey  String?
 
   createdAt DateTime @default(now())

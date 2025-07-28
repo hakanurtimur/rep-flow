@@ -60,7 +60,7 @@ const WeeklyViewCard = ({ calendarEvent, variant }: Props) => {
           backgroundColor: `var(${bg}`,
         }}
       >
-        {variant === "workout" && calendarEvent.scheduledWorkout!.completed && (
+        {variant === "workout" && calendarEvent.scheduledWorkout?.completed && (
           <Badge className="absolute top-1.5 right-3" variant="tertiary">
             Completed
           </Badge>
@@ -75,8 +75,8 @@ const WeeklyViewCard = ({ calendarEvent, variant }: Props) => {
                 <Link
                   href={
                     variant === "nutrition"
-                      ? "/??"
-                      : `/workouts/list/${calendarEvent.workout!.id}?from=/dashboard`
+                      ? "/nutrition-plans/list"
+                      : `/workouts/list/${calendarEvent.workout?.id}?from=/dashboard`
                   }
                   className="flex gap-2 items-center font-semibold hover:underline"
                 >
@@ -89,7 +89,7 @@ const WeeklyViewCard = ({ calendarEvent, variant }: Props) => {
                   />
                   {variant === "nutrition"
                     ? "Nutrition"
-                    : calendarEvent.workout!.name}
+                    : calendarEvent.workout?.name}
                 </Link>
               </TooltipTrigger>
               <TooltipContent className="capitalize">
@@ -99,17 +99,17 @@ const WeeklyViewCard = ({ calendarEvent, variant }: Props) => {
           </TooltipProvider>
           <div className="flex gap-2 items-center">
             {variant === "workout" &&
-              !calendarEvent.scheduledWorkout!.completed && (
+              !calendarEvent.scheduledWorkout?.completed && (
                 <StartWorkoutSessionButton
-                  scheduledWorkoutId={calendarEvent.scheduledWorkout!.id}
+                  scheduledWorkoutId={calendarEvent.scheduledWorkout?.id ?? ""}
                   variant={"icon"}
                   fg={fg}
                 />
               )}
             {variant === "workout" && (
               <UpdateScheduledWorkoutStatusButton
-                completed={calendarEvent.scheduledWorkout!.completed}
-                workoutId={calendarEvent.scheduledWorkout!.id}
+                completed={calendarEvent.scheduledWorkout?.completed ?? false}
+                workoutId={calendarEvent.scheduledWorkout?.id ?? ""}
                 foregroundColor={fg}
               />
             )}

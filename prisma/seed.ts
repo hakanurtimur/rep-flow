@@ -5,22 +5,30 @@ const prisma = new PrismaClient();
 async function main() {
   const userId = "9a3f3b18-76d8-49ac-b623-6bf8651bd3df";
 
-  // 1. Temizlik
-  await prisma.workoutTemplateOnWorkout.deleteMany();
-  await prisma.templateExerciseSet.deleteMany();
-  await prisma.workoutExerciseSet.deleteMany();
-  await prisma.templateExercise.deleteMany();
-  await prisma.workoutExercise.deleteMany();
-  await prisma.calendarEvent.deleteMany();
+  // 1. Clean
+  await prisma.mealFood.deleteMany();
+  await prisma.meal.deleteMany();
+  await prisma.nutritionPlan.deleteMany();
+
   await prisma.workoutSession.deleteMany();
   await prisma.scheduledWorkout.deleteMany();
+
+  await prisma.calendarEvent.deleteMany();
+
+  await prisma.workoutTemplateOnWorkout.deleteMany();
+  await prisma.templateExerciseSet.deleteMany();
+  await prisma.templateExercise.deleteMany();
+  await prisma.workoutExerciseSet.deleteMany();
+  await prisma.workoutExercise.deleteMany();
+
   await prisma.workoutTemplate.deleteMany();
   await prisma.workout.deleteMany();
+
   await prisma.exerciseMuscleGroup.deleteMany();
   await prisma.exercise.deleteMany();
   await prisma.muscleGroup.deleteMany();
 
-  // 2. Muscle Group ekle
+  // 2. Muscle Group add
   const systemGroups = [
     "CHEST",
     "BACK",
@@ -42,7 +50,7 @@ async function main() {
     where: { isSystem: true },
   });
 
-  // 3. Exercise ekle
+  // 3. Exercise add
   const exercises = [];
   for (let i = 0; i < 3; i++) {
     const exercise = await prisma.exercise.create({
@@ -67,7 +75,7 @@ async function main() {
     exercises.push(exercise);
   }
 
-  // 4. Workout ekle
+  // 4. Workout add
   const workout = await prisma.workout.create({
     data: {
       name: "Seed Workout 1",
@@ -101,7 +109,7 @@ async function main() {
     }
   }
 
-  // 5. Workout Template oluştur
+  // 5. Workout Template create
   const template = await prisma.workoutTemplate.create({
     data: {
       name: "Template 1",
@@ -135,7 +143,7 @@ async function main() {
     }
   }
 
-  // 6. Workout <-> Template bağlantısını pivot tabloya ekle
+  // 6. Workout <-> Template relation to pivot table
   await prisma.workoutTemplateOnWorkout.create({
     data: {
       workoutId: workout.id,
