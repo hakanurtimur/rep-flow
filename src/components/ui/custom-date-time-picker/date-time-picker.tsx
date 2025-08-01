@@ -22,6 +22,7 @@ interface DateTimePickerProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  dateDisabled?: boolean;
 }
 
 const viewVariants = [
@@ -35,6 +36,7 @@ export function DateTimePicker({
   placeholder = "Pick a date and time",
   disabled = false,
   className,
+  dateDisabled,
 }: DateTimePickerProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(
@@ -149,9 +151,14 @@ export function DateTimePicker({
                 <ExpandableButton
                   size="icon"
                   variant="ghost"
-                  className="bg-transparent shadow-none cursor-pointer"
+                  className={cn(
+                    "bg-transparent shadow-none cursor-pointer",
+                    dateDisabled &&
+                      mode === "date" &&
+                      "opacity-50 cursor-not-allowed",
+                  )}
                   onClick={() => {
-                    if (mode === "date") {
+                    if (mode === "date" && !dateDisabled) {
                       setStep(mode as "date" | "time");
                     } else {
                       if (selectedDate) {

@@ -1,8 +1,8 @@
-import { createFood } from "@/services/food-service";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { Prisma } from "@prisma/client";
 import { FoodSchema } from "@/zod-schemas/food-schemas";
+import { createFood } from "@/services/food-service";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);

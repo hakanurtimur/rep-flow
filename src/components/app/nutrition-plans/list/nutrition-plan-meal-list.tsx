@@ -11,7 +11,7 @@ const WorkoutList = ({ nutritionPlan }: Props) => {
   return (
     <>
       {nutritionPlan && nutritionPlan.meals.length > 0 ? (
-        <MotionContainerY key={"card"} className="grid grid-cols-3 gap-4">
+        <MotionContainerY key={"card"} className="flex flex-col gap-4">
           {nutritionPlan.meals.map((meal) => (
             <NutritionPlanMealListItem key={meal.id} meal={meal} />
           ))}

@@ -23,6 +23,7 @@ interface FormDateTimePickerProps<
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  dateDisabled?: boolean;
 }
 
 export function FormDateTimePicker<
@@ -36,6 +37,7 @@ export function FormDateTimePicker<
   placeholder,
   disabled,
   className,
+  dateDisabled,
 }: FormDateTimePickerProps<TFieldValues, TName>) {
   return (
     <FormField
@@ -52,6 +54,7 @@ export function FormDateTimePicker<
               }}
               placeholder={placeholder}
               disabled={disabled}
+              dateDisabled={dateDisabled}
             />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
